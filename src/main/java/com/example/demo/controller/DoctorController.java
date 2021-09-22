@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,13 +30,23 @@ public class DoctorController {
 	}
 
 	@GetMapping("/{id}")
-	public @ResponseBody ResponseEntity<Object> findById(@PathVariable int id) {
+	public @ResponseBody ResponseEntity<Object> findById(@PathVariable Long id) {
 		Optional<DoctorDTO> dto = doctorService.findById(id);
 		if (dto.isPresent()) {
 			return ResponseEntity.status(HttpStatus.OK).body(dto.get());
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient with id " + id + " does not exist!");
 		}
+	}
+
+	@PutMapping
+	public String update(@RequestBody DoctorDTO dto) {
+		try {
+			doctorService.update(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "bravo.";
 	}
 
 	@PostMapping()
@@ -48,7 +59,11 @@ public class DoctorController {
 	@DeleteMapping
 	public String delete(@RequestBody DoctorDTO dto) {
 
-		doctorService.delete(dto);
+		try {
+			doctorService.delete(dto);
+		} catch (Exception e) {
+			return e.getMessage();
+		}
 		return "bravo";
 	}
 

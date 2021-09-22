@@ -1,7 +1,6 @@
 package com.example.demo.dto;
 
 import java.io.Serializable;
-import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,5 +17,5 @@ public class SpecializationDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String name;
-	private Set<DoctorDTO> doctors;
+//	private Set<DoctorDTO> doctors;
 }

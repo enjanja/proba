@@ -29,7 +29,7 @@ public class HospitalController {
 	}
 
 	@GetMapping("/{id}")
-	public @ResponseBody ResponseEntity<Object> findById(@PathVariable int id) {
+	public @ResponseBody ResponseEntity<Object> findById(@PathVariable Long id) {
 		Optional<HospitalDTO> dto = hospitalService.findById(id);
 		if (dto.isPresent()) {
 			return ResponseEntity.status(HttpStatus.OK).body(dto.get());

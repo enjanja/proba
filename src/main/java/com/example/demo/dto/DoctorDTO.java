@@ -16,12 +16,14 @@ public class DoctorDTO implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private int id;
+	private Long id;
 	private String name;
 	private String username;
 	private String password;
-	private SpecializationDTO specialization;
+	private Set<HospitalDTO> hospitals;
+
+//	private SpecializationDTO specialization;
 //	private int specialization_id; // SpecializationDTO specialization
-	private Set<ExaminationDTO> examinations;
+//	private Set<ExaminationDTO> examinations;
 
 }

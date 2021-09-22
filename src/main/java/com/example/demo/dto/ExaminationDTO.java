@@ -20,8 +20,8 @@ public class ExaminationDTO implements Serializable {
 	private int id;
 //	private DoctorSimpleDTO doctor;
 //	private PatientSimpleDTO patient;
-	private DoctorDTO doctor;
-	private PatientDTO patient;
+//	private DoctorDTO doctor;
+//	private PatientDTO patient;
 	private LocalDate date;
 	private String diagnosis;
 }

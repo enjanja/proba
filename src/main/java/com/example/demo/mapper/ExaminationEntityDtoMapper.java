@@ -18,8 +18,8 @@ public class ExaminationEntityDtoMapper {
 	public ExaminationDTO toDto(ExaminationEntity examination) {
 		ExaminationDTO dto = new ExaminationDTO();
 		dto.setId(examination.getId());
-		dto.setDoctor(doctor.toDto(examination.getDoctor()));
-		dto.setPatient(patient.toDto(examination.getPatient()));
+//		dto.setDoctor(doctor.toDto(examination.getDoctor()));
+//		dto.setPatient(patient.toDto(examination.getPatient()));
 		dto.setDate(examination.getDate());
 		dto.setDiagnosis(examination.getDiagnosis());
 		return dto;
@@ -28,8 +28,8 @@ public class ExaminationEntityDtoMapper {
 	public ExaminationEntity toEntity(ExaminationDTO examination) {
 		ExaminationEntity entity = new ExaminationEntity();
 		entity.setId(examination.getId());
-		entity.setDoctor(doctor.toEntity(examination.getDoctor()));
-		entity.setPatient(patient.toEntity(examination.getPatient()));
+//		entity.setDoctor(doctor.toEntity(examination.getDoctor()));
+//		entity.setPatient(patient.toEntity(examination.getPatient()));
 		entity.setDate(examination.getDate());
 		entity.setDiagnosis(examination.getDiagnosis());
 		return entity;

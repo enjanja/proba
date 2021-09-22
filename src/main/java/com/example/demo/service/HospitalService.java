@@ -34,7 +34,7 @@ public class HospitalService {
 		this.nurseEntityDtoMapper = nurseEntityDtoMapper;
 	}
 
-	public Optional<HospitalDTO> findById(int id) {
+	public Optional<HospitalDTO> findById(Long id) {
 		Optional<HospitalEntity> hospital = hospitalRepozitory.findById(id);
 		if (hospital.isPresent()) {
 			return Optional.of(hospitalEntityDtoMapper.toDto(hospital.get()));

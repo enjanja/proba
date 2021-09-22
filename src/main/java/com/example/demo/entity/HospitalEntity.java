@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -11,34 +13,41 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "hospital")
 public class HospitalEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Long id;
 	private String address;
 	private String name;
 
 	@ManyToMany(mappedBy = "hospitals")
-	Set<DoctorEntity> doctors;
+	Set<DoctorEntity> doctors = new HashSet<>();
 
 	@OneToMany(mappedBy = "hospital")
 	private Set<NurseEntity> nurse;
 
-//	public void addDoctor(DoctorEntity doctor) {
-//		doctors.add(doctor);
-////		doctor.getHospitals().add(this);
-//	}
-//
-//	public void removeDoctor(DoctorEntity doctor) {
-//		doctors.remove(doctor);
-////		doctor.getHospitals().remove(this);
-//	}
+	@Override
+	public boolean equals(Object object) {
+		if (this == object)
+			return true;
+		if (object == null || getClass() != object.getClass())
+			return false;
+		HospitalEntity hospital = (HospitalEntity) object;
+		return Objects.equals(id, hospital.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
 }
