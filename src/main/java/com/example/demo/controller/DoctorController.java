@@ -1,11 +1,11 @@
 package com.example.demo.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,40 +14,42 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.HospitalDTO;
-import com.example.demo.service.HospitalService;
+import com.example.demo.dto.DoctorDTO;
+import com.example.demo.service.DoctorService;
 
 @RestController
-@RequestMapping(path = "/hospital")
-public class HospitalController {
-
-	private HospitalService hospitalService;
+@RequestMapping(path = "/doctor")
+public class DoctorController {
+	DoctorService doctorService;
 
 	@Autowired
-	public HospitalController(HospitalService hospitalService) {
-		this.hospitalService = hospitalService;
+	public DoctorController(DoctorService doctorService) {
+		super();
+		this.doctorService = doctorService;
 	}
 
 	@GetMapping("/{id}")
 	public @ResponseBody ResponseEntity<Object> findById(@PathVariable int id) {
-		Optional<HospitalDTO> dto = hospitalService.findById(id);
+		Optional<DoctorDTO> dto = doctorService.findById(id);
 		if (dto.isPresent()) {
 			return ResponseEntity.status(HttpStatus.OK).body(dto.get());
 		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Exam with id " + id + " does not exist!");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient with id " + id + " does not exist!");
 		}
 	}
 
-	@GetMapping
-	public @ResponseBody ResponseEntity<List<HospitalDTO>> getAll() throws Exception {
-		return ResponseEntity.status(HttpStatus.OK).body(hospitalService.getAll());
+	@PostMapping()
+	public String save(@RequestBody DoctorDTO dto) {
+
+		doctorService.save(dto);
+		return "bravo";
 	}
 
-	@PostMapping
-	public String save(@RequestBody HospitalDTO dto) {
+	@DeleteMapping
+	public String delete(@RequestBody DoctorDTO dto) {
 
-		hospitalService.save(dto);
-		return "successful";
+		doctorService.delete(dto);
+		return "bravo";
 	}
 
 }

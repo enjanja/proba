@@ -18,6 +18,8 @@ public class ExaminationDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private int id;
+//	private DoctorSimpleDTO doctor;
+//	private PatientSimpleDTO patient;
 	private DoctorDTO doctor;
 	private PatientDTO patient;
 	private LocalDate date;
