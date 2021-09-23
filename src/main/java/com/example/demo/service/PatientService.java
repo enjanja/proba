@@ -28,7 +28,7 @@ public class PatientService {
 		this.patientEntityDtoMapper = patientEntityDtoMapper;
 	}
 
-	public Optional<PatientDTO> findById(int id) {
+	public Optional<PatientDTO> findById(Long id) {
 		Optional<PatientEntity> entity = patientRepository.findById(id);
 		if (entity.isPresent()) {
 			return Optional.of(patientEntityDtoMapper.toDto(entity.get()));
@@ -46,7 +46,7 @@ public class PatientService {
 	public PatientDTO save(PatientDTO dto) throws Exception {
 		Optional<PatientEntity> entity = patientRepository.findById(dto.getId());
 		if (entity.isPresent()) {
-			throw new Exception("Nurse already exists");
+			throw new Exception("Patient already exists");
 		}
 		PatientEntity nurse = patientRepository.save(patientEntityDtoMapper.toEntity(dto));
 		return patientEntityDtoMapper.toDto(nurse);
@@ -63,7 +63,7 @@ public class PatientService {
 		return Optional.empty();
 	}
 
-	public PatientDTO delete(int id) throws Exception {
+	public PatientDTO delete(Long id) throws Exception {
 		Optional<PatientEntity> studentEntity = patientRepository.findById(id);
 		if (studentEntity.isPresent()) {
 			patientRepository.delete(studentEntity.get());

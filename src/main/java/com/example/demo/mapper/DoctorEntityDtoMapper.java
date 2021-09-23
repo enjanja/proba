@@ -10,9 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.dto.DoctorDTO;
+import com.example.demo.dto.ExaminationDTO;
 import com.example.demo.dto.HospitalDTO;
 import com.example.demo.entity.DoctorEntity;
+import com.example.demo.entity.ExaminationEntity;
 import com.example.demo.entity.HospitalEntity;
+import com.example.demo.repository.ExaminationRepository;
 import com.example.demo.repository.HospitalRepozitory;
 
 @Component
@@ -25,6 +28,12 @@ public class DoctorEntityDtoMapper {
 	@Autowired
 	private HospitalEntityDtoMapper hospitalMapper;
 
+	@Autowired
+	private ExaminationEntityDtoMapper examinationMapper;
+
+	@Autowired
+	private ExaminationRepository examinationRepository;
+
 	public DoctorDTO toDto(DoctorEntity entity) {
 		DoctorDTO dto = new DoctorDTO();
 
@@ -35,6 +44,9 @@ public class DoctorEntityDtoMapper {
 		Set<HospitalDTO> hospitals = entity.getHospitals().stream().map(hospital -> hospitalMapper.toDto(hospital))
 				.collect(Collectors.toSet());
 		dto.setHospitals(hospitals);
+
+		Set<ExaminationDTO> examinations = entity.getExaminations().stream()
+				.map(examination -> examinationMapper.toDto(examination)).collect(Collectors.toSet());
 		return dto;
 	}
 
@@ -54,6 +66,17 @@ public class DoctorEntityDtoMapper {
 				HospitalEntity hospital = new HospitalEntity();
 				hospital = hospitalMapper.toEntity(hospitalDto);
 				entity.addHospital(hospital);
+			}
+		}
+
+		for (ExaminationDTO examinationDto : dto.getExaminations()) {
+			Optional<ExaminationEntity> existingExamination = examinationRepository.findById(examinationDto.getId());
+			if (existingExamination.isPresent()) {
+				entity.addExamination(existingExamination.get());
+			} else {
+				ExaminationEntity examination = new ExaminationEntity();
+				examination = examinationMapper.toEntity(examinationDto);
+				entity.addExamination(examination);
 			}
 		}
 

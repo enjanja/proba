@@ -1,40 +1,65 @@
 package com.example.demo.entity;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "examination")
 public class ExaminationEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	@EmbeddedId
+	private ExaminationId id;
 
-	@ManyToOne
-	@JoinColumn(name = "patient_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@MapsId("patient_id")
 	private PatientEntity patient;
 
 	@ManyToOne
-	@JoinColumn(name = "doctor_id")
+	@MapsId("doctor_id")
 	private DoctorEntity doctor;
 
-	private LocalDate date;
+//	private LocalDate date;
 
 	private String diagnosis;
+
+	public ExaminationEntity(DoctorEntity doctor, PatientEntity patient, LocalDate date, String diagnosis) {
+		super();
+		this.id = new ExaminationId(doctor.getId(), patient.getId(), date);
+		this.patient = patient;
+		this.doctor = doctor;
+//		this.date = date;
+		this.diagnosis = diagnosis;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+
+		if (o == null || getClass() != o.getClass())
+			return false;
+
+		ExaminationEntity that = (ExaminationEntity) o;
+		return Objects.equals(id, that.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
 
 }

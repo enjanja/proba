@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.ExaminationDTO;
 import com.example.demo.entity.ExaminationEntity;
+import com.example.demo.entity.ExaminationId;
 import com.example.demo.mapper.ExaminationEntityDtoMapper;
 import com.example.demo.repository.ExaminationRepository;
 
@@ -26,7 +27,7 @@ public class ExaminationService {
 		this.mapper = mapper;
 	}
 
-	public Optional<ExaminationDTO> findById(int id) {
+	public Optional<ExaminationDTO> findById(ExaminationId id) {
 		Optional<ExaminationEntity> entity = examinationRepository.findById(id);
 		if (entity.isPresent()) {
 			return Optional.of(mapper.toDto(entity.get()));

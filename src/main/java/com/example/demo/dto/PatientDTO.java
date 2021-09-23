@@ -15,7 +15,7 @@ public class PatientDTO implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private int id;
+	private Long id;
 	private String jmbg;
 	private String name;
 //	private Set<ExaminationDTO> examinations;

@@ -11,21 +11,21 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Getter
 @Setter
 @Table(name = "doctor", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }) })
 public class DoctorEntity {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -43,9 +43,17 @@ public class DoctorEntity {
 //	@ManyToOne
 //	@JoinColumn(name = "specialization_id", nullable = false)
 //	private SpecializationEntity specialization;
-//
-//	@OneToMany(mappedBy = "doctor")
-//	Set<ExaminationEntity> examination;
+
+	@OneToMany(mappedBy = "doctor", cascade = CascadeType.PERSIST)
+	Set<ExaminationEntity> examinations;
+
+	public DoctorEntity(String name, String username, String password, Set<HospitalEntity> hospitals) {
+		super();
+		this.name = name;
+		this.username = username;
+		this.password = password;
+		this.hospitals = hospitals;
+	}
 
 	public void addHospital(HospitalEntity hospital) {
 		hospitals.add(hospital);
@@ -55,6 +63,14 @@ public class DoctorEntity {
 	public void removeHospital(HospitalEntity hospital) {
 		hospitals.remove(hospital);
 		hospital.getDoctors().remove(this);
+	}
+
+	public void addExamination(ExaminationEntity examination) {
+		examinations.add(examination);
+	}
+
+	public void removeExamination(ExaminationEntity examination) {
+		examinations.remove(examination);
 	}
 
 	public boolean equals(Object object) {

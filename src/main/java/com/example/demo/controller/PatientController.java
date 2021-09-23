@@ -31,7 +31,7 @@ public class PatientController {
 	}
 
 	@GetMapping("/{id}")
-	public @ResponseBody ResponseEntity<Object> findById(@PathVariable int id) {
+	public @ResponseBody ResponseEntity<Object> findById(@PathVariable Long id) {
 		Optional<PatientDTO> dto = patientService.findById(id);
 		if (dto.isPresent()) {
 			return ResponseEntity.status(HttpStatus.OK).body(dto.get());
@@ -71,7 +71,7 @@ public class PatientController {
 	}
 
 	@DeleteMapping("/{id}")
-	public @ResponseBody ResponseEntity<Object> delete(@PathVariable(name = "id") int id) {
+	public @ResponseBody ResponseEntity<Object> delete(@PathVariable(name = "id") Long id) {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(patientService.delete(id));
 		} catch (Exception e) {
