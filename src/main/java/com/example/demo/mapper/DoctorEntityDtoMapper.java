@@ -33,6 +33,9 @@ public class DoctorEntityDtoMapper {
 	private HospitalEntityDtoMapper hospitalMapper;
 
 	@Autowired
+	private SimpleSpecializationEntityDtoMapper specializationMapper;
+
+	@Autowired
 	private ExaminationEntityDtoMapper examinationMapper;
 
 	@Autowired
@@ -45,12 +48,13 @@ public class DoctorEntityDtoMapper {
 		dto.setName(entity.getName());
 		dto.setPassword(entity.getPassword());
 		dto.setUsername(entity.getUsername());
+		dto.setSpecialization(specializationMapper.toDto(entity.getSpecialization()));
 		Set<HospitalDTO> hospitals = entity.getHospitals().stream().map(hospital -> hospitalMapper.toDto(hospital))
 				.collect(Collectors.toSet());
 		dto.setHospitals(hospitals);
-
 		Set<ExaminationDTO> examinations = entity.getExaminations().stream()
 				.map(examination -> examinationMapper.toDto(examination)).collect(Collectors.toSet());
+		dto.setExaminations(examinations);
 		return dto;
 	}
 
@@ -61,6 +65,7 @@ public class DoctorEntityDtoMapper {
 		entity.setName(dto.getName());
 		entity.setPassword(dto.getPassword());
 		entity.setUsername(dto.getUsername());
+		entity.setSpecialization(specializationMapper.toEntity(dto.getSpecialization()));
 
 		for (HospitalDTO hospitalDto : dto.getHospitals()) {
 			Optional<HospitalEntity> existingHospital = hospitalRepozitory.findById(hospitalDto.getId());
@@ -85,6 +90,7 @@ public class DoctorEntityDtoMapper {
 		}
 
 		return entity;
-	};
+
+	}
 
 }

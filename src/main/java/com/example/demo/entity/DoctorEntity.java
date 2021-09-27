@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import lombok.Getter;
@@ -20,10 +21,6 @@ import lombok.Setter;
 @DiscriminatorValue("2")
 public class DoctorEntity extends UserEntity {
 
-//	@ManyToOne
-//	@JoinColumn(name = "specialization_id", nullable = false)
-//	private SpecializationEntity specialization;
-
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "hospital_doctor", joinColumns = @JoinColumn(name = "doctor_id"), inverseJoinColumns = @JoinColumn(name = "hospital_id"))
 	Set<HospitalEntity> hospitals = new HashSet<>();
@@ -31,16 +28,21 @@ public class DoctorEntity extends UserEntity {
 	@OneToMany(mappedBy = "doctor", cascade = CascadeType.PERSIST)
 	Set<ExaminationEntity> examinations = new HashSet<>();
 
+	@ManyToOne
+	@JoinColumn(name = "specializatoin_id", nullable = false)
+	private SpecializationEntity specialization;
+
 	public DoctorEntity() {
 		super();
 
 	}
 
 	public DoctorEntity(Long id, String username, String password, String name, Set<HospitalEntity> hospitals,
-			Set<ExaminationEntity> examinations) {
+			Set<ExaminationEntity> examinations, SpecializationEntity specialization) {
 		super(id, username, password, name);
 		this.examinations = examinations;
 		this.hospitals = hospitals;
+		this.specialization = specialization;
 	}
 
 	public void addHospital(HospitalEntity hospital) {

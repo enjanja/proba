@@ -26,6 +26,7 @@ public class DoctorDTO extends UserDTO {
 
 	private Set<HospitalDTO> hospitals;
 	private Set<ExaminationDTO> examinations;
+	private SimpleSpecializationDTO specialization;
 
 //	private SpecializationDTO specialization;
 //	private int specialization_id; // SpecializationDTO specialization

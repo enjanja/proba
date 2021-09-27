@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.entity.SpecializationEntity;
 
 @Repository
-public interface SpecializationRepository extends JpaRepository<SpecializationEntity, Integer> {
+public interface SpecializationRepository extends JpaRepository<SpecializationEntity, Long> {
 
 }
