@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.mapstruct.InjectionStrategy;
+import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +22,8 @@ import com.example.demo.repository.HospitalRepozitory;
 
 @Component
 @Transactional
+@Mapper(componentModel = "spring", uses = {
+		UserEntityDTOMapper.class }, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public class DoctorEntityDtoMapper {
 
 	@Autowired

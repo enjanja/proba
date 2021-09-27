@@ -1,27 +1,31 @@
 package com.example.demo.dto;
 
-import java.io.Serializable;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
+@SuperBuilder
 @NoArgsConstructor
-public class DoctorDTO implements Serializable {
+@ToString(callSuper = true, includeFieldNames = true)
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
+public class DoctorDTO extends UserDTO {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Long id;
-	private String name;
-	private String username;
-	private String password;
+
 	private Set<HospitalDTO> hospitals;
-	Set<ExaminationDTO> examinations;
+	private Set<ExaminationDTO> examinations;
 
 //	private SpecializationDTO specialization;
 //	private int specialization_id; // SpecializationDTO specialization

@@ -29,7 +29,7 @@ public class NurseController {
 	}
 
 	@GetMapping("/{id}")
-	public @ResponseBody ResponseEntity<Object> findById(@PathVariable int id) {
+	public @ResponseBody ResponseEntity<Object> findById(@PathVariable Long id) {
 		Optional<NurseDTO> dto = nurseService.findById(id);
 		if (dto.isPresent()) {
 			return ResponseEntity.status(HttpStatus.OK).body(dto.get());
