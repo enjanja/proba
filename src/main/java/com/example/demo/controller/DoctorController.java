@@ -35,7 +35,7 @@ public class DoctorController {
 		if (dto.isPresent()) {
 			return ResponseEntity.status(HttpStatus.OK).body(dto.get());
 		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient with id " + id + " does not exist!");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Doctor with id " + id + " does not exist!");
 		}
 	}
 
@@ -51,7 +51,6 @@ public class DoctorController {
 
 	@PostMapping()
 	public String save(@RequestBody DoctorDTO dto) {
-
 		doctorService.save(dto);
 		return "bravo";
 	}

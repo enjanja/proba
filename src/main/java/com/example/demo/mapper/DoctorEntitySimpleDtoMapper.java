@@ -6,8 +6,8 @@ import com.example.demo.dto.DoctorSimpleDTO;
 import com.example.demo.entity.DoctorEntity;
 
 @Mapper(componentModel = "spring")
-public interface DoctorSimpleDtoMapper {
-	public DoctorSimpleDTO toDto(DoctorEntity doctor);
+public interface DoctorEntitySimpleDtoMapper {
+	DoctorSimpleDTO toDto(DoctorEntity entity);
 
-	public DoctorEntity toEntity(DoctorSimpleDTO doctor);
+	DoctorEntity toEntity(DoctorSimpleDTO dto);
 }

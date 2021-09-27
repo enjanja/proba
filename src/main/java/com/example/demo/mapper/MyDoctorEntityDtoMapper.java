@@ -1,10 +1,6 @@
 package com.example.demo.mapper;
 
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,12 +11,12 @@ import com.example.demo.dto.HospitalDTO;
 import com.example.demo.entity.DoctorEntity;
 import com.example.demo.entity.ExaminationEntity;
 import com.example.demo.entity.HospitalEntity;
-import com.example.demo.repository.ExaminationRepository;
 import com.example.demo.repository.HospitalRepozitory;
 
 @Component
-@Transactional
-public class DoctorEntityDtoMapper {
+public class MyDoctorEntityDtoMapper {
+	DoctorEntitySimpleDtoMapper simpleDoctorMapper;
+	PatientEntitySimpleDtoMapper simplePatientMapper;
 
 	@Autowired
 	private HospitalRepozitory hospitalRepozitory;
@@ -28,35 +24,37 @@ public class DoctorEntityDtoMapper {
 	@Autowired
 	private HospitalEntityDtoMapper hospitalMapper;
 
-	@Autowired
-	private ExaminationEntityDtoMapper examinationMapper;
+//	@Autowired
+//	private ExaminationEntityDtoMapper examinationMapper;
+//
+//	@Autowired
+//	private ExaminationRepository examinationRepository;
 
 	@Autowired
-	private ExaminationRepository examinationRepository;
+	public MyDoctorEntityDtoMapper(DoctorEntitySimpleDtoMapper simpleDoctorMapper,
+			PatientEntitySimpleDtoMapper simplePatientMapper) {
+		this.simpleDoctorMapper = simpleDoctorMapper;
+		this.simplePatientMapper = simplePatientMapper;
+	}
 
 	public DoctorDTO toDto(DoctorEntity entity) {
 		DoctorDTO dto = new DoctorDTO();
-
 		dto.setId(entity.getId());
 		dto.setName(entity.getName());
 		dto.setPassword(entity.getPassword());
 		dto.setUsername(entity.getUsername());
-
-		Set<HospitalDTO> hospitals = entity.getHospitals().stream().map(hospital -> hospitalMapper.toDto(hospital))
-				.collect(Collectors.toSet());
-		dto.setHospitals(hospitals);
-
-		Set<ExaminationDTO> examinations = entity.getExaminations().stream()
-				.map(examination -> examinationMapper.toDto(examination)).collect(Collectors.toSet()); // <- ovo sranje
-																										// pravi poblem
-		dto.setExaminations(examinations);
+		for (ExaminationEntity examination : entity.getExaminations()) {
+			dto.getExaminations()
+					.add(new ExaminationDTO(simpleDoctorMapper.toDto(entity),
+							simplePatientMapper.toDto(examination.getPatient()), examination.getId().getDate(),
+							examination.getDiagnosis()));
+		}
 
 		return dto;
 	}
 
 	public DoctorEntity toEntity(DoctorDTO dto) {
 		DoctorEntity entity = new DoctorEntity();
-
 		entity.setId(dto.getId());
 		entity.setName(dto.getName());
 		entity.setPassword(dto.getPassword());
@@ -74,14 +72,9 @@ public class DoctorEntityDtoMapper {
 		}
 
 		for (ExaminationDTO examinationDto : dto.getExaminations()) {
-			Optional<ExaminationEntity> existingExamination = examinationRepository.findById(examinationDto.getId());
-			if (existingExamination.isPresent()) {
-				entity.addExamination(existingExamination.get());
-			} else {
-				ExaminationEntity examination = new ExaminationEntity();
-				examination = examinationMapper.toEntity(examinationDto);
-				entity.addExamination(examination);
-			}
+			entity.getExaminations()
+					.add(new ExaminationEntity(entity, simplePatientMapper.toEntity(examinationDto.getPatient()),
+							examinationDto.getId().getDate(), examinationDto.getDiagnosis()));
 		}
 
 		return entity;

@@ -42,6 +42,14 @@ public class HospitalService {
 		return Optional.empty();
 	}
 
+//	public HospitalDTO findById(Long id) {
+//		Optional<HospitalEntity> hospital = hospitalRepozitory.findById(id);
+//		if (hospital.isPresent()) {
+//			return hospitalEntityDtoMapper.toDto(hospital.get());
+//		}
+//		return null;
+//	}
+
 	public List<HospitalDTO> getAll() {
 		List<HospitalEntity> entities = hospitalRepozitory.findAll();
 		return entities.stream().map(entity -> {

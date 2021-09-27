@@ -6,11 +6,10 @@ import org.mapstruct.Mapper;
 import com.example.demo.dto.PatientDTO;
 import com.example.demo.entity.PatientEntity;
 
-@Mapper(componentModel = "spring", uses = {
+@Mapper(componentModel = "spring", uses = { DoctorEntitySimpleDtoMapper.class,
 		PatientEntitySimpleDtoMapper.class }, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
-public interface PatientEntityDtoMapper {
+public interface DoctorDtoMapper {
+	PatientDTO toDto(PatientEntity entity);
 
-	PatientDTO toDto(PatientEntity patient);
-
-	PatientEntity toEntity(PatientDTO patient);
+	PatientEntity toEntity(PatientDTO dto);
 }

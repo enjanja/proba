@@ -50,4 +50,10 @@ public class ExaminationId implements Serializable {
 	public int hashCode() {
 		return Objects.hash(doctorId, patientId, date);
 	}
+
+	public ExaminationId(Long doctorId, Long patientId) {
+		super();
+		this.doctorId = doctorId;
+		this.patientId = patientId;
+	}
 }

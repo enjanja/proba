@@ -6,6 +6,7 @@ import java.util.Objects;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
@@ -25,11 +26,13 @@ public class ExaminationEntity {
 	private ExaminationId id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@MapsId("patient_id")
+	@MapsId("patientId")
+	@JoinColumn(name = "patient_id")
 	private PatientEntity patient;
 
 	@ManyToOne
-	@MapsId("doctor_id")
+	@MapsId("doctorId")
+	@JoinColumn(name = "doctor_id")
 	private DoctorEntity doctor;
 
 //	private LocalDate date;

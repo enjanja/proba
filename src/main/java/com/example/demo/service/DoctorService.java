@@ -12,8 +12,8 @@ import com.example.demo.dto.DoctorDTO;
 import com.example.demo.dto.HospitalDTO;
 import com.example.demo.entity.DoctorEntity;
 import com.example.demo.entity.HospitalEntity;
-import com.example.demo.mapper.DoctorEntityDtoMapper;
 import com.example.demo.mapper.HospitalEntityDtoMapper;
+import com.example.demo.mapper.MyDoctorEntityDtoMapper;
 import com.example.demo.repository.DoctorRepository;
 import com.example.demo.repository.HospitalRepozitory;
 
@@ -21,12 +21,13 @@ import com.example.demo.repository.HospitalRepozitory;
 @Transactional
 public class DoctorService {
 	DoctorRepository doctorRepository;
+	MyDoctorEntityDtoMapper doctorEntityDtoMapper;
+
 	HospitalRepozitory hospitalRepozitory;
-	DoctorEntityDtoMapper doctorEntityDtoMapper;
 	HospitalEntityDtoMapper hospitalMapper;
 
 	@Autowired
-	public DoctorService(DoctorRepository doctorRepository, DoctorEntityDtoMapper doctorEntityDtoMapper,
+	public DoctorService(DoctorRepository doctorRepository, MyDoctorEntityDtoMapper doctorEntityDtoMapper,
 			HospitalRepozitory hospitalRepozitory, HospitalEntityDtoMapper hospitalMapper) {
 		super();
 		this.doctorRepository = doctorRepository;

@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -44,8 +46,9 @@ public class DoctorEntity {
 //	@JoinColumn(name = "specialization_id", nullable = false)
 //	private SpecializationEntity specialization;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "doctor", cascade = CascadeType.PERSIST)
-	Set<ExaminationEntity> examinations;
+	Set<ExaminationEntity> examinations = new HashSet<>();
 
 	public DoctorEntity(String name, String username, String password, Set<HospitalEntity> hospitals) {
 		super();
