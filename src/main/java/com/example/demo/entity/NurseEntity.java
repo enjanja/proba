@@ -25,6 +25,6 @@ public class NurseEntity {
 	private String name;
 
 	@ManyToOne
-	@JoinColumn(name = "hospital_id", nullable = false)
+	@JoinColumn(name = "hospital_id")
 	private HospitalEntity hospital;
 }

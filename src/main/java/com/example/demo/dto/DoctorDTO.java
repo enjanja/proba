@@ -1,6 +1,7 @@
 package com.example.demo.dto;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +22,7 @@ public class DoctorDTO implements Serializable {
 	private String username;
 	private String password;
 	private Set<HospitalDTO> hospitals;
-	Set<ExaminationDTO> examinations;
+	Set<ExaminationDTO> examinations = new HashSet<>();
 
 //	private SpecializationDTO specialization;
 //	private int specialization_id; // SpecializationDTO specialization

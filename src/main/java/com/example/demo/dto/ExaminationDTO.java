@@ -20,8 +20,6 @@ public class ExaminationDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private ExaminationId id;
-//	private DoctorSimpleDTO doctor;
-//	private PatientSimpleDTO patient;
 	private DoctorSimpleDTO doctor;
 	private PatientSimpleDTO patient;
 //	private LocalDate date;
@@ -30,9 +28,10 @@ public class ExaminationDTO implements Serializable {
 	public ExaminationDTO(DoctorSimpleDTO doctor, PatientSimpleDTO patient, LocalDate date, String diagnosis) {
 		super();
 		this.id = new ExaminationId(doctor.getId(), patient.getId(), date);
+//		this.date = date;
+		this.diagnosis = diagnosis;
 		this.doctor = doctor;
 		this.patient = patient;
-		this.diagnosis = diagnosis;
 	}
 
 }

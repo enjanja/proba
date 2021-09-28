@@ -2,6 +2,8 @@ package com.example.demo.mapper;
 
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +16,7 @@ import com.example.demo.entity.HospitalEntity;
 import com.example.demo.repository.HospitalRepozitory;
 
 @Component
+@Transactional
 public class MyDoctorEntityDtoMapper {
 	DoctorEntitySimpleDtoMapper simpleDoctorMapper;
 	PatientEntitySimpleDtoMapper simplePatientMapper;
@@ -23,12 +26,6 @@ public class MyDoctorEntityDtoMapper {
 
 	@Autowired
 	private HospitalEntityDtoMapper hospitalMapper;
-
-//	@Autowired
-//	private ExaminationEntityDtoMapper examinationMapper;
-//
-//	@Autowired
-//	private ExaminationRepository examinationRepository;
 
 	@Autowired
 	public MyDoctorEntityDtoMapper(DoctorEntitySimpleDtoMapper simpleDoctorMapper,
@@ -72,6 +69,7 @@ public class MyDoctorEntityDtoMapper {
 		}
 
 		for (ExaminationDTO examinationDto : dto.getExaminations()) {
+
 			entity.getExaminations()
 					.add(new ExaminationEntity(entity, simplePatientMapper.toEntity(examinationDto.getPatient()),
 							examinationDto.getId().getDate(), examinationDto.getDiagnosis()));

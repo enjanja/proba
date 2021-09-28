@@ -1,6 +1,8 @@
 package com.example.demo.entity;
 
+import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -68,12 +70,25 @@ public class DoctorEntity {
 		hospital.getDoctors().remove(this);
 	}
 
-	public void addExamination(ExaminationEntity examination) {
+	public void addExamination(PatientEntity patient, LocalDate date) {
+		ExaminationEntity examination = new ExaminationEntity(this, patient, date, "");
 		examinations.add(examination);
+		patient.getExaminations().add(examination);
 	}
 
-	public void removeExamination(ExaminationEntity examination) {
-		examinations.remove(examination);
+	public void removeExamination(PatientEntity patient, LocalDate date) {
+		for (Iterator<ExaminationEntity> iterator = examinations.iterator(); iterator.hasNext();) {
+			ExaminationEntity examinationEntity = iterator.next();
+
+			if (examinationEntity.getDoctor().equals(this) && examinationEntity.getPatient().equals(patient)
+					&& examinationEntity.getId().getDate().equals(date)) {
+				iterator.remove();
+				examinationEntity.getPatient().getExaminations().remove(examinationEntity);
+				examinationEntity.setDoctor(null);
+				examinationEntity.setPatient(null);
+			}
+
+		}
 	}
 
 	public boolean equals(Object object) {

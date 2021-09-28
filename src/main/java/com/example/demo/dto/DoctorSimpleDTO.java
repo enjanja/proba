@@ -13,5 +13,5 @@ public class DoctorSimpleDTO {
 	private String name;
 	private String username;
 	private String password;
-//	private SpecializationDTO specialization;
+	private SpecializationDTO specialization;
 }

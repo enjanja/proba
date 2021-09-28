@@ -13,7 +13,6 @@ import com.example.demo.dto.DoctorDTO;
 import com.example.demo.dto.ExaminationDTO;
 import com.example.demo.dto.HospitalDTO;
 import com.example.demo.entity.DoctorEntity;
-import com.example.demo.entity.ExaminationEntity;
 import com.example.demo.entity.HospitalEntity;
 import com.example.demo.repository.ExaminationRepository;
 import com.example.demo.repository.HospitalRepozitory;
@@ -73,16 +72,16 @@ public class DoctorEntityDtoMapper {
 			}
 		}
 
-		for (ExaminationDTO examinationDto : dto.getExaminations()) {
-			Optional<ExaminationEntity> existingExamination = examinationRepository.findById(examinationDto.getId());
-			if (existingExamination.isPresent()) {
-				entity.addExamination(existingExamination.get());
-			} else {
-				ExaminationEntity examination = new ExaminationEntity();
-				examination = examinationMapper.toEntity(examinationDto);
-				entity.addExamination(examination);
-			}
-		}
+//		for (ExaminationDTO examinationDto : dto.getExaminations()) {
+//			Optional<ExaminationEntity> existingExamination = examinationRepository.findById(examinationDto.getId());
+//			if (existingExamination.isPresent()) {
+//				entity.addExamination(existingExamination.get());
+//			} else {
+//				ExaminationEntity examination = new ExaminationEntity();
+//				examination = examinationMapper.toEntity(examinationDto);
+//				entity.addExamination(examination);
+//			}
+//		}
 
 		return entity;
 	};
