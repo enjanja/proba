@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,4 +14,5 @@ public interface DoctorRepository extends JpaRepository<DoctorEntity, Long> {
 
 	public List<DoctorEntity> findByHospitals(HospitalEntity hospitals);
 
+	public Optional<DoctorEntity> findByUsername(String username);
 }

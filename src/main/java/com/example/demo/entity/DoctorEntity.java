@@ -13,9 +13,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -36,20 +39,22 @@ public class DoctorEntity {
 
 	private String name;
 
+	@NotNull
+	@NotBlank
 	private String username;
 
 	private String password;
 
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@ManyToMany(cascade = { CascadeType.ALL })
 	@JoinTable(name = "hospital_doctor", joinColumns = @JoinColumn(name = "doctor_id"), inverseJoinColumns = @JoinColumn(name = "hospital_id"))
 	Set<HospitalEntity> hospitals = new HashSet<>();
 
-//	@ManyToOne
-//	@JoinColumn(name = "specialization_id", nullable = false)
-//	private SpecializationEntity specialization;
+	@ManyToOne
+	@JoinColumn(name = "specialization_id", nullable = false)
+	private SpecializationEntity specialization;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "doctor", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
 	Set<ExaminationEntity> examinations = new HashSet<>();
 
 	public DoctorEntity(String name, String username, String password, Set<HospitalEntity> hospitals) {

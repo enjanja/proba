@@ -40,7 +40,7 @@ public class PatientEntity {
 	private Long id;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "patient", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
 	Set<ExaminationEntity> examinations = new HashSet<>();
 
 	public PatientEntity(String jmbg, String name) {

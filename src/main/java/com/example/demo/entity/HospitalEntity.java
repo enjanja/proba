@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,7 +31,7 @@ public class HospitalEntity {
 	private String address;
 	private String name;
 
-	@ManyToMany(mappedBy = "hospitals")
+	@ManyToMany(mappedBy = "hospitals", cascade = CascadeType.ALL)
 	Set<DoctorEntity> doctors = new HashSet<>();
 
 	@OneToMany(mappedBy = "hospital")

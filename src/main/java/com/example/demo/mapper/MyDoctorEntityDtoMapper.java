@@ -1,6 +1,7 @@
 package com.example.demo.mapper;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -46,7 +47,7 @@ public class MyDoctorEntityDtoMapper {
 							simplePatientMapper.toDto(examination.getPatient()), examination.getId().getDate(),
 							examination.getDiagnosis()));
 		}
-
+		dto.setHospitals(entity.getHospitals().stream().map(hospitalMapper::toDto).collect(Collectors.toSet()));
 		return dto;
 	}
 

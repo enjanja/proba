@@ -22,9 +22,9 @@ public class DoctorDTO implements Serializable {
 	private String username;
 	private String password;
 	private Set<HospitalDTO> hospitals;
-	Set<ExaminationDTO> examinations = new HashSet<>();
+	private Set<ExaminationDTO> examinations = new HashSet<>();
 
-//	private SpecializationDTO specialization;
+	private SpecializationDTO specialization;
 //	private int specialization_id; // SpecializationDTO specialization
 //	private Set<ExaminationDTO> examinations;
 
