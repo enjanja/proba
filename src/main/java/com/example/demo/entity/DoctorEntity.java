@@ -54,7 +54,7 @@ public class DoctorEntity {
 	private SpecializationEntity specialization;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "doctor", cascade = { CascadeType.MERGE, CascadeType.PERSIST }, orphanRemoval = true)
 	Set<ExaminationEntity> examinations = new HashSet<>();
 
 	public DoctorEntity(String name, String username, String password, Set<HospitalEntity> hospitals) {

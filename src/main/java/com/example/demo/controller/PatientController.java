@@ -58,8 +58,8 @@ public class PatientController {
 	@PutMapping
 	public @ResponseBody ResponseEntity<Object> update(@RequestBody PatientDTO patient) {
 		try {
-			Optional<PatientDTO> dto = patientService.update(patient);
-			if (dto.isPresent()) {
+			PatientDTO dto = patientService.update(patient);
+			if (dto != null) {
 				return ResponseEntity.status(HttpStatus.OK).body(dto);
 			} else {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dto);

@@ -135,12 +135,14 @@ public class DoctorService {
 
 		Optional<PatientEntity> patientEntity = patientRepository.findById(patientId);
 		if (patientEntity.isEmpty()) {
-			throw new Exception("PAtient doesnt exist");
+			throw new Exception("Patient doesnt exist");
 		}
 
 		DoctorEntity doctor = doctorEntity.get();
 		PatientEntity patient = patientEntity.get();
-		doctor.getExaminations().remove(new ExaminationEntity(doctor, patient, date, ""));
+		doctor.removeExamination(patient, date);
+
+//		patientRepository.save(patient);
 		doctor = doctorRepository.save(doctor);
 
 		return doctorMapper.toDto(doctor);

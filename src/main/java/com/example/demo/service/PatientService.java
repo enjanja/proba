@@ -54,22 +54,28 @@ public class PatientService {
 
 	// nope
 
-	public Optional<PatientDTO> update(PatientDTO dto) {
+	public PatientDTO update(PatientDTO dto) throws Exception {
 		Optional<PatientEntity> entity = patientRepository.findById(dto.getId());
-		if (entity.isPresent()) {
-			PatientEntity patient = patientRepository.save(patientEntityDtoMapper.toEntity(dto));
-			return Optional.of(patientEntityDtoMapper.toDto(patient));
+		if (entity.isEmpty()) {
+			throw new Exception("Patient doesn't exist!");
 		}
-		return Optional.empty();
+		entity.get().setName(dto.getName());
+
+		PatientEntity patient = patientRepository.save(entity.get());
+		return patientEntityDtoMapper.toDto(patient);
+
 	}
 
 	public PatientDTO delete(Long id) throws Exception {
-		Optional<PatientEntity> studentEntity = patientRepository.findById(id);
-		if (studentEntity.isPresent()) {
-			patientRepository.delete(studentEntity.get());
-			return patientEntityDtoMapper.toDto(studentEntity.get());
+		Optional<PatientEntity> patientEntity = patientRepository.findById(id);
+		if (patientEntity.isEmpty()) {
+			throw new Exception("Patient with id " + id + " does not exist!");
 		}
-		throw new Exception("Patient with id " + id + " does not exist!");
+
+		patientRepository.delete(patientEntity.get());
+
+		return patientEntityDtoMapper.toDto(patientEntity.get());
+
 	}
 
 }

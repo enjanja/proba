@@ -85,7 +85,7 @@ public class DoctorController {
 
 	}
 
-	@PostMapping("/removeExam")
+	@DeleteMapping("/removeExam")
 	public @ResponseBody ResponseEntity<Object> removeExam(@RequestParam Long patientId, @RequestParam Long doctorId,
 			@RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 		try {
