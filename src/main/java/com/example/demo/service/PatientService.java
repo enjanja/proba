@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.PatientDTO;
 import com.example.demo.entity.PatientEntity;
+import com.example.demo.exception.ResourceAlreadyExistsException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.mapper.PatientEntityDtoMapper;
 import com.example.demo.repository.PatientRepository;
 
@@ -28,12 +30,12 @@ public class PatientService {
 		this.patientEntityDtoMapper = patientEntityDtoMapper;
 	}
 
-	public Optional<PatientDTO> findById(Long id) {
+	public PatientDTO findById(Long id) {
 		Optional<PatientEntity> entity = patientRepository.findById(id);
-		if (entity.isPresent()) {
-			return Optional.of(patientEntityDtoMapper.toDto(entity.get()));
+		if (entity.isEmpty()) {
+			throw new ResourceNotFoundException("Patient doesn't exist.");
 		}
-		return Optional.empty();
+		return patientEntityDtoMapper.toDto(entity.get());
 	}
 
 	public List<PatientDTO> getAll() {
@@ -43,10 +45,10 @@ public class PatientService {
 		}).collect(Collectors.toList());
 	}
 
-	public PatientDTO save(PatientDTO dto) throws Exception {
+	public PatientDTO save(PatientDTO dto) {
 		Optional<PatientEntity> entity = patientRepository.findById(dto.getId());
 		if (entity.isPresent()) {
-			throw new Exception("Patient already exists");
+			throw new ResourceAlreadyExistsException(dto.getJmbg(), "This patient already exists");
 		}
 		PatientEntity nurse = patientRepository.save(patientEntityDtoMapper.toEntity(dto));
 		return patientEntityDtoMapper.toDto(nurse);
@@ -54,10 +56,10 @@ public class PatientService {
 
 	// nope
 
-	public PatientDTO update(PatientDTO dto) throws Exception {
+	public PatientDTO update(PatientDTO dto) {
 		Optional<PatientEntity> entity = patientRepository.findById(dto.getId());
 		if (entity.isEmpty()) {
-			throw new Exception("Patient doesn't exist!");
+			throw new ResourceNotFoundException("Patient doesn't exist!");
 		}
 		entity.get().setName(dto.getName());
 
@@ -66,10 +68,10 @@ public class PatientService {
 
 	}
 
-	public PatientDTO delete(Long id) throws Exception {
+	public PatientDTO delete(Long id) {
 		Optional<PatientEntity> patientEntity = patientRepository.findById(id);
 		if (patientEntity.isEmpty()) {
-			throw new Exception("Patient with id " + id + " does not exist!");
+			throw new ResourceNotFoundException("Patient with id " + id + " does not exist!");
 		}
 
 		patientRepository.delete(patientEntity.get());

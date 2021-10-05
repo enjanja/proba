@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,26 +27,35 @@ public class HospitalController {
 		this.hospitalService = hospitalService;
 	}
 
+	/**
+	 * Returns a hospital from db.
+	 * 
+	 * @param id hospital id.
+	 */
 	@GetMapping("/{id}")
 	public @ResponseBody ResponseEntity<Object> findById(@PathVariable Long id) {
-		Optional<HospitalDTO> dto = hospitalService.findById(id);
-		if (dto.isPresent()) {
-			return ResponseEntity.status(HttpStatus.OK).body(dto.get());
-		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Exam with id " + id + " does not exist!");
-		}
+
+		return ResponseEntity.status(HttpStatus.OK).body(hospitalService.findById(id));
 	}
 
+	/**
+	 * Returns a list of all existing hospitals.
+	 */
 	@GetMapping
 	public @ResponseBody ResponseEntity<List<HospitalDTO>> getAll() throws Exception {
 		return ResponseEntity.status(HttpStatus.OK).body(hospitalService.getAll());
 	}
 
+	/**
+	 * Saves a hospital to db.
+	 * 
+	 * @param dto object containing info about hospital.
+	 */
 	@PostMapping
-	public String save(@RequestBody HospitalDTO dto) {
+	public ResponseEntity<Object> save(@RequestBody HospitalDTO dto) {
 
 		hospitalService.save(dto);
-		return "successful";
+		return ResponseEntity.status(HttpStatus.OK).body("Successfully saved hospital.");
 	}
 
 }
