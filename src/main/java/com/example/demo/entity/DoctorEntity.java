@@ -6,19 +6,13 @@ import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -26,24 +20,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
 @Entity
 @Getter
 @Setter
-@Table(name = "doctor", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }) })
-public class DoctorEntity {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
-	private String name;
-
-	@NotNull
-	@NotBlank
-	private String username;
-
-	private String password;
+@NoArgsConstructor
+@DiscriminatorValue("2")
+public class DoctorEntity extends UserEntity {
 
 	@ManyToMany(cascade = { CascadeType.ALL })
 	@JoinTable(name = "hospital_doctor", joinColumns = @JoinColumn(name = "doctor_id"), inverseJoinColumns = @JoinColumn(name = "hospital_id"))
@@ -57,11 +39,8 @@ public class DoctorEntity {
 	@OneToMany(mappedBy = "doctor", cascade = { CascadeType.MERGE, CascadeType.PERSIST }, orphanRemoval = true)
 	Set<ExaminationEntity> examinations = new HashSet<>();
 
-	public DoctorEntity(String name, String username, String password, Set<HospitalEntity> hospitals) {
-		super();
-		this.name = name;
-		this.username = username;
-		this.password = password;
+	public DoctorEntity(Long id, String name, String username, String password, Set<HospitalEntity> hospitals) {
+		super(id, username, password, name);
 		this.hospitals = hospitals;
 	}
 

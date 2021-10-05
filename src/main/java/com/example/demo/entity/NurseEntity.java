@@ -1,30 +1,29 @@
 package com.example.demo.entity;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "nurse", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }) })
-public class NurseEntity {
-
-	@Id
-	private int id;
-	private String username;
-	private String password;
-	private String name;
+@DiscriminatorValue("1")
+public class NurseEntity extends UserEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "hospital_id")
 	private HospitalEntity hospital;
+
+	public NurseEntity() {
+		super();
+	}
+
+	public NurseEntity(Long id, String username, String password, String name, HospitalEntity hospital) {
+		super(id, username, password, name);
+		this.hospital = hospital;
+	}
 }

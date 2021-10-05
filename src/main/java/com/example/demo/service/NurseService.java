@@ -28,7 +28,7 @@ public class NurseService {
 		this.nurseEntityDtoMapper = nurseEntityDtoMapper;
 	}
 
-	public Optional<NurseDTO> findById(int id) {
+	public Optional<NurseDTO> findById(Long id) {
 		Optional<NurseEntity> nurse = nurseRepository.findById(id);
 		if (nurse.isPresent()) {
 			return Optional.of(nurseEntityDtoMapper.toDto(nurse.get()));
