@@ -15,6 +15,8 @@ import com.example.demo.entity.DoctorEntity;
 import com.example.demo.entity.ExaminationEntity;
 import com.example.demo.entity.HospitalEntity;
 import com.example.demo.entity.PatientEntity;
+import com.example.demo.exception.ResourceAlreadyExistsException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.mapper.DoctorEntityDtoMapper;
 import com.example.demo.mapper.ExaminationEntityDtoMapper;
 import com.example.demo.mapper.HospitalEntityDtoMapper;
@@ -46,12 +48,12 @@ public class DoctorService {
 		this.patientRepository = patientRepository;
 	}
 
-	public Optional<DoctorDTO> findById(Long id) {
+	public DoctorDTO findById(Long id) {
 		Optional<DoctorEntity> entity = doctorRepository.findById(id);
-		if (entity.isPresent()) {
-			return Optional.of(doctorMapper.toDto(entity.get()));
+		if (entity.isEmpty()) {
+			throw new ResourceNotFoundException("Doctor doesn't exist");
 		}
-		return Optional.empty();
+		return doctorMapper.toDto(entity.get());
 	}
 
 	public List<DoctorDTO> getAll() {
@@ -59,19 +61,19 @@ public class DoctorService {
 		return null;
 	}
 
-	public DoctorDTO save(DoctorDTO dto) throws Exception {
+	public DoctorDTO save(DoctorDTO dto) {
 		Optional<DoctorEntity> doctorEntity = doctorRepository.findByUsername(dto.getUsername());
 		if (doctorEntity.isPresent()) {
-			throw new Exception("Doctor already exists.");
+			throw new ResourceAlreadyExistsException(dto.getUsername(), "Doctor with this username already exists.");
 		}
 		DoctorEntity doctor = doctorRepository.save(doctorMapper.toEntity(dto));
 		return doctorMapper.toDto(doctor);
 	}
 
-	public void update(DoctorDTO dto) throws Exception {
+	public void update(DoctorDTO dto) {
 		Optional<DoctorEntity> exisitngDoctor = doctorRepository.findById(dto.getId());
 		if (exisitngDoctor.isEmpty()) {
-			throw new Exception("Doctor doesn't exist!");
+			throw new ResourceNotFoundException("This doctor does't exist");
 		}
 
 		DoctorEntity doctor = exisitngDoctor.get();
@@ -92,10 +94,10 @@ public class DoctorService {
 
 	}
 
-	public void delete(DoctorDTO dto) throws Exception {
-		Optional<DoctorEntity> doctorEntity = doctorRepository.findById(dto.getId());
+	public void delete(DoctorDTO dto) {
+		Optional<DoctorEntity> doctorEntity = doctorRepository.findByUsername(dto.getUsername());
 		if (doctorEntity.isEmpty()) {
-			throw new Exception("Doctor doesnt exist.");
+			throw new ResourceNotFoundException("Doctor doesn't exist.");
 		}
 
 		doctorRepository.delete(doctorMapper.toEntity(dto));

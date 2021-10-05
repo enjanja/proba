@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -34,44 +33,30 @@ public class DoctorController {
 
 	@GetMapping("/{id}")
 	public @ResponseBody ResponseEntity<Object> findById(@PathVariable Long id) {
-		Optional<DoctorDTO> dto = doctorService.findById(id);
-		if (dto.isPresent()) {
-			return ResponseEntity.status(HttpStatus.OK).body(dto.get());
-		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Doctor with id " + id + " does not exist!");
-		}
+
+		return ResponseEntity.status(HttpStatus.OK).body(doctorService.findById(id));
+
 	}
 
 	@PutMapping
-	public String update(@RequestBody DoctorDTO dto) {
-		try {
-			doctorService.update(dto);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "bravo.";
+	public ResponseEntity<Object> update(@RequestBody DoctorDTO dto) {
+
+		doctorService.update(dto);
+		return ResponseEntity.status(HttpStatus.OK).body("Doctor successfully updated!");
 	}
 
 	@PostMapping()
-	public String save(@RequestBody DoctorDTO dto) {
-		try {
-			doctorService.save(dto);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return "bravo";
+	public ResponseEntity<Object> save(@RequestBody DoctorDTO dto) {
+
+		doctorService.save(dto);
+		return ResponseEntity.status(HttpStatus.OK).body("Doctor successfully saved!");
 	}
 
 	@DeleteMapping
-	public String delete(@RequestBody DoctorDTO dto) {
+	public ResponseEntity<Object> delete(@RequestBody DoctorDTO dto) {
 
-		try {
-			doctorService.delete(dto);
-		} catch (Exception e) {
-			return e.getMessage();
-		}
-		return "bravo";
+		doctorService.delete(dto);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body("Doctor successfully deleted!");
 	}
 
 	@PostMapping("/addExam")
