@@ -33,4 +33,5 @@ public class UserEntity {
 	String username;
 	String password;
 	String name;
+	Boolean active;
 }

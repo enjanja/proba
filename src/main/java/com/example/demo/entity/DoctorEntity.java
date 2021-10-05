@@ -39,8 +39,9 @@ public class DoctorEntity extends UserEntity {
 	@OneToMany(mappedBy = "doctor", cascade = { CascadeType.MERGE, CascadeType.PERSIST }, orphanRemoval = true)
 	Set<ExaminationEntity> examinations = new HashSet<>();
 
-	public DoctorEntity(Long id, String name, String username, String password, Set<HospitalEntity> hospitals) {
-		super(id, username, password, name);
+	public DoctorEntity(Long id, String name, String username, String password, Set<HospitalEntity> hospitals,
+			Boolean active) {
+		super(id, username, password, name, active);
 		this.hospitals = hospitals;
 	}
 

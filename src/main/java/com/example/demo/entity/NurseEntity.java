@@ -22,8 +22,9 @@ public class NurseEntity extends UserEntity {
 		super();
 	}
 
-	public NurseEntity(Long id, String username, String password, String name, HospitalEntity hospital) {
-		super(id, username, password, name);
+	public NurseEntity(Long id, String username, String password, String name, HospitalEntity hospital,
+			Boolean active) {
+		super(id, username, password, name, active);
 		this.hospital = hospital;
 	}
 }
