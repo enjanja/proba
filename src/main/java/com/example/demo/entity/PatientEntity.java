@@ -12,12 +12,14 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NaturalIdCache;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.istack.NotNull;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +34,12 @@ import lombok.Setter;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class PatientEntity {
 
+	@NotNull
+	@Size(min = 13, max = 13)
 	private String jmbg;
+
+	@NotNull
+	@Size(min = 2)
 	private String name;
 
 	@Id

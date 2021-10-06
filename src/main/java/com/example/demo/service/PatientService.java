@@ -46,9 +46,9 @@ public class PatientService {
 	}
 
 	public PatientDTO save(PatientDTO dto) {
-		Optional<PatientEntity> entity = patientRepository.findById(dto.getId());
+		Optional<PatientEntity> entity = patientRepository.findByJmbg(dto.getJmbg());
 		if (entity.isPresent()) {
-			throw new ResourceAlreadyExistsException(dto.getJmbg(), "This patient already exists");
+			throw new ResourceAlreadyExistsException(dto.getJmbg(), "Patient with this jmbg already exists");
 		}
 		PatientEntity nurse = patientRepository.save(patientEntityDtoMapper.toEntity(dto));
 		return patientEntityDtoMapper.toDto(nurse);

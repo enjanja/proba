@@ -27,7 +27,8 @@ import lombok.Setter;
 @DiscriminatorValue("2")
 public class DoctorEntity extends UserEntity {
 
-	@ManyToMany(cascade = { CascadeType.ALL })
+	// https://newbedev.com/detached-entity-passed-to-persist-when-save-the-child-data
+	@ManyToMany() // cascade = { CascadeType.ALL } -> ovde se bunio kod cuvanja doktora
 	@JoinTable(name = "hospital_doctor", joinColumns = @JoinColumn(name = "doctor_id"), inverseJoinColumns = @JoinColumn(name = "hospital_id"))
 	Set<HospitalEntity> hospitals = new HashSet<>();
 
