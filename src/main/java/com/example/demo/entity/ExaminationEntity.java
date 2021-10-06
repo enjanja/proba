@@ -35,8 +35,6 @@ public class ExaminationEntity {
 	@JoinColumn(name = "doctor_id")
 	private DoctorEntity doctor;
 
-//	private LocalDate date;
-
 	private String diagnosis;
 
 	public ExaminationEntity(DoctorEntity doctor, PatientEntity patient, LocalDateTime dateTime, String diagnosis) {
@@ -44,7 +42,6 @@ public class ExaminationEntity {
 		this.id = new ExaminationId(doctor.getId(), patient.getId(), dateTime);
 		this.patient = patient;
 		this.doctor = doctor;
-//		this.date = date;
 		this.diagnosis = diagnosis;
 	}
 

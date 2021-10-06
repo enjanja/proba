@@ -54,8 +54,6 @@ public class PatientService {
 		return patientEntityDtoMapper.toDto(nurse);
 	}
 
-	// nope
-
 	public PatientDTO update(PatientDTO dto) {
 		Optional<PatientEntity> entity = patientRepository.findById(dto.getId());
 		if (entity.isEmpty()) {

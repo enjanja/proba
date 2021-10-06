@@ -22,13 +22,11 @@ public class ExaminationDTO implements Serializable {
 	private ExaminationId id;
 	private DoctorSimpleDTO doctor;
 	private PatientSimpleDTO patient;
-//	private LocalDate date;
 	private String diagnosis;
 
 	public ExaminationDTO(DoctorSimpleDTO doctor, PatientSimpleDTO patient, LocalDateTime dateTime, String diagnosis) {
 		super();
 		this.id = new ExaminationId(doctor.getId(), patient.getId(), dateTime);
-//		this.date = date;
 		this.diagnosis = diagnosis;
 		this.doctor = doctor;
 		this.patient = patient;

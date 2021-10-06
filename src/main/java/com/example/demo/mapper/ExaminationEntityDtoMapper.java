@@ -40,9 +40,8 @@ public class ExaminationEntityDtoMapper {
 	public ExaminationDTO toDto(ExaminationEntity examination) {
 		ExaminationDTO dto = new ExaminationDTO();
 		dto.setId(examination.getId());
-		dto.setDoctor(doctorMapper.toDto(examination.getDoctor())); // i ovo sranje pravi problem
+		dto.setDoctor(doctorMapper.toDto(examination.getDoctor()));
 		dto.setPatient(patientMapper.toDto(examination.getPatient()));
-//		dto.setDate(examination.getDate());
 		dto.setDiagnosis(examination.getDiagnosis());
 		return dto;
 	}
@@ -51,7 +50,6 @@ public class ExaminationEntityDtoMapper {
 		ExaminationEntity entity = new ExaminationEntity();
 		entity.setId(examination.getId());
 		entity.setPatient(patientMapper.toEntity(examination.getPatient()));
-//		entity.setDate(examination.getDate());
 		entity.setDiagnosis(examination.getDiagnosis());
 
 //	 dodavanje pregleda u doktora

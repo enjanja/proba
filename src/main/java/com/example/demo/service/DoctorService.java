@@ -103,11 +103,8 @@ public class DoctorService {
 		doctorRepository.deleteById(id);
 	}
 
-<<<<<<< HEAD
-	public DoctorDTO addExam(Long patientId, Long doctorId, LocalDateTime date) throws Exception {
-=======
-	public DoctorDTO addExam(Long patientId, Long doctorId, LocalDate date) {
->>>>>>> 9732208e6649a2e185e41928866e2e9df1034891
+	public DoctorDTO addExam(Long patientId, Long doctorId, LocalDateTime dateTime) {
+
 		Optional<DoctorEntity> doctorEntity = doctorRepository.findById(doctorId);
 		if (doctorEntity.isEmpty()) {
 			throw new ResourceNotFoundException("Doctor doesn't exist.");
@@ -121,20 +118,16 @@ public class DoctorService {
 		DoctorEntity doctor = doctorEntity.get();
 		PatientEntity patient = patientEntity.get();
 
-		if (doctor.getExaminations().contains(new ExaminationEntity(doctor, patient, date, ""))) {
+		if (doctor.getExaminations().contains(new ExaminationEntity(doctor, patient, dateTime, ""))) {
 			throw new ResourceAlreadyExistsException(null, "This examination already exists.");
 		}
-		doctor.getExaminations().add(new ExaminationEntity(doctor, patient, date, ""));
+		doctor.getExaminations().add(new ExaminationEntity(doctor, patient, dateTime, ""));
 		doctor = doctorRepository.save(doctor);
 		return doctorMapper.toDto(doctor);
 
 	}
 
-<<<<<<< HEAD
-	public DoctorDTO removeExam(Long patientId, Long doctorId, LocalDateTime dateTime) throws Exception {
-=======
-	public DoctorDTO removeExam(Long patientId, Long doctorId, LocalDate date) {
->>>>>>> 9732208e6649a2e185e41928866e2e9df1034891
+	public DoctorDTO removeExam(Long patientId, Long doctorId, LocalDateTime dateTime) {
 		Optional<DoctorEntity> doctorEntity = doctorRepository.findById(doctorId);
 		if (doctorEntity.isEmpty()) {
 			throw new ResourceNotFoundException("Doctor doesn't exist.");
