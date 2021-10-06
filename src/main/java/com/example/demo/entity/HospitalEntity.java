@@ -12,6 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+
+import com.sun.istack.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,7 +31,13 @@ public class HospitalEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@NotNull
+	@NotBlank
 	private String address;
+
+	@NotNull
+	@NotBlank
 	private String name;
 
 	@ManyToMany(mappedBy = "hospitals", cascade = CascadeType.ALL)

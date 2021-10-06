@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cache;
@@ -35,10 +36,12 @@ import lombok.Setter;
 public class PatientEntity {
 
 	@NotNull
+	@NotBlank
 	@Size(min = 13, max = 13)
 	private String jmbg;
 
 	@NotNull
+	@NotBlank
 	@Size(min = 2)
 	private String name;
 

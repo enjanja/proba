@@ -49,7 +49,7 @@ public class NurseService {
 	}
 
 	public NurseDTO save(NurseDTO dto) {
-		Optional<NurseEntity> entity = nurseRepository.findById(dto.getId());
+		Optional<NurseEntity> entity = nurseRepository.findByUsername(dto.getUsername());
 		if (entity.isPresent()) {
 			throw new ResourceAlreadyExistsException(dto.getUsername(), "Nurse already exists");
 		}

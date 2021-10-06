@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -30,8 +32,19 @@ public class UserEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
+
+	@NotNull
+	@NotBlank
 	String username;
+
+	@NotNull
+	@NotBlank
 	String password;
+
+	@NotNull
+	@NotBlank
 	String name;
+
+	@NotNull
 	Boolean active;
 }

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import com.sun.istack.NotNull;
 
@@ -25,10 +26,11 @@ public class PatientDTO implements Serializable {
 
 	@NotNull
 	@NotBlank
+	@Size(min = 13, max = 13)
 	private String jmbg;
 
 	@NotNull
-//	@Size(min = 2)
+	@Size(min = 2)
 	@NotBlank
 	private String name;
 
