@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.NurseDTO;
 import com.example.demo.entity.NurseEntity;
+import com.example.demo.exception.ResourceAlreadyExistsException;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.mapper.HospitalEntityDtoMapper;
 import com.example.demo.mapper.NurseEntityDtoMapper;
 import com.example.demo.repository.NurseRepository;
 
@@ -20,44 +23,53 @@ public class NurseService {
 
 	NurseRepository nurseRepository;
 	NurseEntityDtoMapper nurseEntityDtoMapper;
+	HospitalEntityDtoMapper hospitalMapper;
 
 	@Autowired
-	public NurseService(NurseRepository nurseRepository, NurseEntityDtoMapper nurseEntityDtoMapper) {
+	public NurseService(NurseRepository nurseRepository, NurseEntityDtoMapper nurseEntityDtoMapper,
+			HospitalEntityDtoMapper hospitalMapper) {
 		super();
 		this.nurseRepository = nurseRepository;
 		this.nurseEntityDtoMapper = nurseEntityDtoMapper;
+		this.hospitalMapper = hospitalMapper;
 	}
 
-	public Optional<NurseDTO> findById(Long id) {
+	public NurseDTO findById(Long id) {
 		Optional<NurseEntity> nurse = nurseRepository.findById(id);
-		if (nurse.isPresent()) {
-			return Optional.of(nurseEntityDtoMapper.toDto(nurse.get()));
+		if (nurse.isEmpty()) {
+			throw new ResourceNotFoundException("Nurse doesn't exist.");
 		}
-		return Optional.empty();
+
+		return nurseEntityDtoMapper.toDto(nurse.get());
 	}
 
 	public List<NurseDTO> getAll() {
 		List<NurseEntity> entities = nurseRepository.findAll();
-		return entities.stream().map(entity -> {
-			return nurseEntityDtoMapper.toDto(entity);
-		}).collect(Collectors.toList());
+		return entities.stream().map(nurseEntityDtoMapper::toDto).collect(Collectors.toList());
 	}
 
-	public NurseDTO save(NurseDTO dto) throws Exception {
+	public NurseDTO save(NurseDTO dto) {
 		Optional<NurseEntity> entity = nurseRepository.findById(dto.getId());
 		if (entity.isPresent()) {
-			throw new Exception("Nurse already exists");
+			throw new ResourceAlreadyExistsException(dto.getUsername(), "Nurse already exists");
 		}
 		NurseEntity nurse = nurseRepository.save(nurseEntityDtoMapper.toEntity(dto));
 		return nurseEntityDtoMapper.toDto(nurse);
 	}
 
-	public Optional<NurseDTO> update(NurseDTO dto) {
-		Optional<NurseEntity> entity = nurseRepository.findById(dto.getId());
-		if (entity.isPresent()) {
-
+	public NurseDTO update(NurseDTO dto) {
+		Optional<NurseEntity> existingNurse = nurseRepository.findById(dto.getId());
+		if (existingNurse.isEmpty()) {
+			throw new ResourceNotFoundException("Nurse doesn't exist.");
 		}
-		return Optional.empty();
+
+		NurseEntity nurse = existingNurse.get();
+		nurse.setName(dto.getName());
+		nurse.setUsername(dto.getUsername());
+		nurse.setPassword(dto.getPassword());
+		nurse.setHospital(hospitalMapper.toEntity(dto.getHospital()));
+
+		return nurseEntityDtoMapper.toDto(nurseRepository.save(nurse));
 	}
 
 	public NurseDTO delete(int id) {

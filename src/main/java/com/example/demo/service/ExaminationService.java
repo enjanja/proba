@@ -13,6 +13,7 @@ import com.example.demo.dto.ExaminationDTO;
 import com.example.demo.dto.UpdateDTO;
 import com.example.demo.entity.ExaminationEntity;
 import com.example.demo.entity.ExaminationId;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.mapper.ExaminationEntityDtoMapper;
 import com.example.demo.repository.ExaminationRepository;
 
@@ -46,11 +47,11 @@ public class ExaminationService {
 		return dto;
 	}
 
-	public ExaminationDTO updateDiagnosis(UpdateDTO dto) throws Exception {
+	public ExaminationDTO updateDiagnosis(UpdateDTO dto) {
 		Optional<ExaminationEntity> existingExam = examinationRepository
 				.findById(new ExaminationId(dto.getDoctorId(), dto.getPatientId(), dto.getDateTime()));
 		if (existingExam.isEmpty()) {
-			throw new Exception("There is no such appointment.");
+			throw new ResourceNotFoundException("There is no such examination.");
 		}
 
 		ExaminationEntity exam = existingExam.get();

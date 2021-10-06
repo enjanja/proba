@@ -94,50 +94,55 @@ public class DoctorService {
 
 	}
 
-	public void delete(DoctorDTO dto) {
-		Optional<DoctorEntity> doctorEntity = doctorRepository.findByUsername(dto.getUsername());
+	public void delete(Long id) {
+		Optional<DoctorEntity> doctorEntity = doctorRepository.findById(id);
 		if (doctorEntity.isEmpty()) {
 			throw new ResourceNotFoundException("Doctor doesn't exist.");
 		}
 
-		doctorRepository.delete(doctorMapper.toEntity(dto));
-
-//		for (HospitalEntity hospital : doctorEntity.get().getHospitals()) {
-//			List<DoctorEntity> doctors = doctorRepository.findByHospitals(hospital);
-//			if (doctors.isEmpty()) {
-//				hospitalRepozitory.delete(hospital);
-//			}
-//		}
+		doctorRepository.deleteById(id);
 	}
 
+<<<<<<< HEAD
 	public DoctorDTO addExam(Long patientId, Long doctorId, LocalDateTime date) throws Exception {
+=======
+	public DoctorDTO addExam(Long patientId, Long doctorId, LocalDate date) {
+>>>>>>> 9732208e6649a2e185e41928866e2e9df1034891
 		Optional<DoctorEntity> doctorEntity = doctorRepository.findById(doctorId);
 		if (doctorEntity.isEmpty()) {
-			throw new Exception("Doctor doesnt exist");
+			throw new ResourceNotFoundException("Doctor doesn't exist.");
 		}
 
 		Optional<PatientEntity> patientEntity = patientRepository.findById(patientId);
 		if (patientEntity.isEmpty()) {
-			throw new Exception("PAtient doesnt exist");
+			throw new ResourceNotFoundException("Patient doesn't exist.");
 		}
 
 		DoctorEntity doctor = doctorEntity.get();
 		PatientEntity patient = patientEntity.get();
+
+		if (doctor.getExaminations().contains(new ExaminationEntity(doctor, patient, date, ""))) {
+			throw new ResourceAlreadyExistsException(null, "This examination already exists.");
+		}
 		doctor.getExaminations().add(new ExaminationEntity(doctor, patient, date, ""));
 		doctor = doctorRepository.save(doctor);
 		return doctorMapper.toDto(doctor);
 
 	}
 
+<<<<<<< HEAD
 	public DoctorDTO removeExam(Long patientId, Long doctorId, LocalDateTime dateTime) throws Exception {
+=======
+	public DoctorDTO removeExam(Long patientId, Long doctorId, LocalDate date) {
+>>>>>>> 9732208e6649a2e185e41928866e2e9df1034891
 		Optional<DoctorEntity> doctorEntity = doctorRepository.findById(doctorId);
 		if (doctorEntity.isEmpty()) {
-			throw new Exception("Doctor doesnt exist");
+			throw new ResourceNotFoundException("Doctor doesn't exist.");
 		}
 
 		Optional<PatientEntity> patientEntity = patientRepository.findById(patientId);
 		if (patientEntity.isEmpty()) {
-			throw new Exception("Patient doesnt exist");
+			throw new ResourceNotFoundException("Patient doesn't exist.");
 		}
 
 		DoctorEntity doctor = doctorEntity.get();

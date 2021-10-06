@@ -31,6 +31,11 @@ public class DoctorController {
 		this.doctorService = doctorService;
 	}
 
+	/**
+	 * Returns doctor from db.
+	 * 
+	 * @param id doctor id
+	 */
 	@GetMapping("/{id}")
 	public @ResponseBody ResponseEntity<Object> findById(@PathVariable Long id) {
 
@@ -38,6 +43,11 @@ public class DoctorController {
 
 	}
 
+	/**
+	 * Updates doctor.
+	 * 
+	 * @param dto object containing doctor information.
+	 */
 	@PutMapping
 	public ResponseEntity<Object> update(@RequestBody DoctorDTO dto) {
 
@@ -45,6 +55,11 @@ public class DoctorController {
 		return ResponseEntity.status(HttpStatus.OK).body("Doctor successfully updated!");
 	}
 
+	/**
+	 * Saves doctor to db.
+	 * 
+	 * @param dto object containing doctor information.
+	 */
 	@PostMapping()
 	public ResponseEntity<Object> save(@RequestBody DoctorDTO dto) {
 
@@ -52,32 +67,64 @@ public class DoctorController {
 		return ResponseEntity.status(HttpStatus.OK).body("Doctor successfully saved!");
 	}
 
-	@DeleteMapping
-	public ResponseEntity<Object> delete(@RequestBody DoctorDTO dto) {
+	/**
+	 * Deletes doctor from db.
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Object> delete(@PathVariable Long id) {
 
-		doctorService.delete(dto);
+		doctorService.delete(id);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body("Doctor successfully deleted!");
 	}
 
+	/**
+	 * Adds examination to the database.
+	 * 
+	 * @param patientId
+	 * @param doctorId
+	 * @param date
+	 */
 	@PostMapping("/addExam")
 	public @ResponseBody ResponseEntity<Object> addExam(@RequestParam Long patientId, @RequestParam Long doctorId,
+<<<<<<< HEAD
 			@RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime dateTime) {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(doctorService.addExam(patientId, doctorId, dateTime));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
+=======
+			@RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+		doctorService.addExam(patientId, doctorId, date);
+		return ResponseEntity.status(HttpStatus.OK).body("Successfully added examination.");
+>>>>>>> 9732208e6649a2e185e41928866e2e9df1034891
 
 	}
 
+	/**
+	 * Removes examination from the database.
+	 * 
+	 * @param patientId
+	 * @param doctorId
+	 * @param date
+	 */
 	@DeleteMapping("/removeExam")
 	public @ResponseBody ResponseEntity<Object> removeExam(@RequestParam Long patientId, @RequestParam Long doctorId,
+<<<<<<< HEAD
 			@RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime dateTime) {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(doctorService.removeExam(patientId, doctorId, dateTime));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
+=======
+			@RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+		doctorService.removeExam(patientId, doctorId, date);
+		return ResponseEntity.status(HttpStatus.OK).body("Successfully removed examination.");
+>>>>>>> 9732208e6649a2e185e41928866e2e9df1034891
 
 	}
 

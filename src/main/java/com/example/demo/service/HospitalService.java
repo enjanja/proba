@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.HospitalDTO;
 import com.example.demo.entity.HospitalEntity;
+import com.example.demo.exception.ResourceAlreadyExistsException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.mapper.DoctorEntityDtoMapper;
 import com.example.demo.mapper.HospitalEntityDtoMapper;
 import com.example.demo.mapper.NurseEntityDtoMapper;
@@ -34,30 +36,25 @@ public class HospitalService {
 		this.nurseEntityDtoMapper = nurseEntityDtoMapper;
 	}
 
-	public Optional<HospitalDTO> findById(Long id) {
+	public HospitalDTO findById(Long id) {
 		Optional<HospitalEntity> hospital = hospitalRepozitory.findById(id);
-		if (hospital.isPresent()) {
-			return Optional.of(hospitalEntityDtoMapper.toDto(hospital.get()));
+		if (hospital.isEmpty()) {
+			throw new ResourceNotFoundException("This hospital doesn't exist.");
 		}
-		return Optional.empty();
-	}
 
-//	public HospitalDTO findById(Long id) {
-//		Optional<HospitalEntity> hospital = hospitalRepozitory.findById(id);
-//		if (hospital.isPresent()) {
-//			return hospitalEntityDtoMapper.toDto(hospital.get());
-//		}
-//		return null;
-//	}
+		return hospitalEntityDtoMapper.toDto(hospital.get());
+	}
 
 	public List<HospitalDTO> getAll() {
 		List<HospitalEntity> entities = hospitalRepozitory.findAll();
-		return entities.stream().map(entity -> {
-			return hospitalEntityDtoMapper.toDto(entity);
-		}).collect(Collectors.toList());
+		return entities.stream().map(hospitalEntityDtoMapper::toDto).collect(Collectors.toList());
 	}
 
 	public void save(HospitalDTO dto) {
+		Optional<HospitalEntity> hospital = hospitalRepozitory.findByName(dto.getName());
+		if (hospital.isPresent()) {
+			throw new ResourceAlreadyExistsException(dto.getName(), "Hospital with this name already exists.");
+		}
 		hospitalRepozitory.save(hospitalEntityDtoMapper.toEntity(dto));
 	}
 

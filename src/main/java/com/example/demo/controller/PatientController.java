@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,53 +29,60 @@ public class PatientController {
 		this.patientService = patientService;
 	}
 
+	/**
+	 * Gets patient from db.
+	 * 
+	 * @param id patient id
+	 */
 	@GetMapping("/{id}")
 	public @ResponseBody ResponseEntity<Object> findById(@PathVariable Long id) {
-		Optional<PatientDTO> dto = patientService.findById(id);
-		if (dto.isPresent()) {
-			return ResponseEntity.status(HttpStatus.OK).body(dto.get());
-		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient with id " + id + " does not exist!");
-		}
+
+		return ResponseEntity.status(HttpStatus.OK).body(patientService.findById(id));
 	}
 
+	/**
+	 * Returns the list of all saved patients.
+	 */
 	@GetMapping
-	public @ResponseBody ResponseEntity<List<PatientDTO>> getAll() throws Exception {
+	public @ResponseBody ResponseEntity<List<PatientDTO>> getAll() {
 		return ResponseEntity.status(HttpStatus.OK).body(patientService.getAll());
 
 	}
 
+	/**
+	 * Saves patient in db.
+	 * 
+	 * @param dto object containing info about patient
+	 */
 	@PostMapping
 	public @ResponseBody ResponseEntity<Object> save(@RequestBody PatientDTO dto) {
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(patientService.save(dto));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-		}
+		patientService.save(dto);
+		return ResponseEntity.status(HttpStatus.OK).body("Patient successfully saved.");
+
 	}
 
+	/**
+	 * Updates patient in db.
+	 * 
+	 * @param patient object containing info about patient
+	 */
 	@PutMapping
 	public @ResponseBody ResponseEntity<Object> update(@RequestBody PatientDTO patient) {
-		try {
-			PatientDTO dto = patientService.update(patient);
-			if (dto != null) {
-				return ResponseEntity.status(HttpStatus.OK).body(dto);
-			} else {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dto);
-			}
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		}
 
+		patientService.update(patient);
+		return ResponseEntity.status(HttpStatus.OK).body("Patient successfully updated.");
 	}
 
+	/**
+	 * Deletes patient from db.
+	 * 
+	 * @param id patient id
+	 */
 	@DeleteMapping("/{id}")
 	public @ResponseBody ResponseEntity<Object> delete(@PathVariable(name = "id") Long id) {
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(patientService.delete(id));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-		}
+		patientService.delete(id);
+		return ResponseEntity.status(HttpStatus.OK).body("Patient successfully deleted.");
+
 	}
 
 }
