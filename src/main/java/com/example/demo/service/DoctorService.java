@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -110,7 +110,7 @@ public class DoctorService {
 //		}
 	}
 
-	public DoctorDTO addExam(Long patientId, Long doctorId, LocalDate date) throws Exception {
+	public DoctorDTO addExam(Long patientId, Long doctorId, LocalDateTime date) throws Exception {
 		Optional<DoctorEntity> doctorEntity = doctorRepository.findById(doctorId);
 		if (doctorEntity.isEmpty()) {
 			throw new Exception("Doctor doesnt exist");
@@ -129,7 +129,7 @@ public class DoctorService {
 
 	}
 
-	public DoctorDTO removeExam(Long patientId, Long doctorId, LocalDate date) throws Exception {
+	public DoctorDTO removeExam(Long patientId, Long doctorId, LocalDateTime dateTime) throws Exception {
 		Optional<DoctorEntity> doctorEntity = doctorRepository.findById(doctorId);
 		if (doctorEntity.isEmpty()) {
 			throw new Exception("Doctor doesnt exist");
@@ -142,7 +142,7 @@ public class DoctorService {
 
 		DoctorEntity doctor = doctorEntity.get();
 		PatientEntity patient = patientEntity.get();
-		doctor.removeExamination(patient, date);
+		doctor.removeExamination(patient, dateTime);
 
 //		patientRepository.save(patient);
 		doctor = doctorRepository.save(doctor);

@@ -1,6 +1,6 @@
 package com.example.demo.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import javax.persistence.EmbeddedId;
@@ -39,9 +39,9 @@ public class ExaminationEntity {
 
 	private String diagnosis;
 
-	public ExaminationEntity(DoctorEntity doctor, PatientEntity patient, LocalDate date, String diagnosis) {
+	public ExaminationEntity(DoctorEntity doctor, PatientEntity patient, LocalDateTime dateTime, String diagnosis) {
 		super();
-		this.id = new ExaminationId(doctor.getId(), patient.getId(), date);
+		this.id = new ExaminationId(doctor.getId(), patient.getId(), dateTime);
 		this.patient = patient;
 		this.doctor = doctor;
 //		this.date = date;

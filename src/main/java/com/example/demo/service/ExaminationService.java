@@ -48,7 +48,7 @@ public class ExaminationService {
 
 	public ExaminationDTO updateDiagnosis(UpdateDTO dto) throws Exception {
 		Optional<ExaminationEntity> existingExam = examinationRepository
-				.findById(new ExaminationId(dto.getDoctorId(), dto.getPatientId(), dto.getDate()));
+				.findById(new ExaminationId(dto.getDoctorId(), dto.getPatientId(), dto.getDateTime()));
 		if (existingExam.isEmpty()) {
 			throw new Exception("There is no such appointment.");
 		}

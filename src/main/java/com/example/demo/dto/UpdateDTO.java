@@ -1,6 +1,6 @@
 package com.example.demo.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ public class UpdateDTO {
 
 	Long doctorId;
 	Long patientId;
-	LocalDate date;
-	LocalDate newDate;
+	LocalDateTime dateTime;
+	LocalDateTime newDateTime;
 	String Diagnosis;
 }

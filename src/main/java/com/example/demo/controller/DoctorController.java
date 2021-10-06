@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -61,9 +61,9 @@ public class DoctorController {
 
 	@PostMapping("/addExam")
 	public @ResponseBody ResponseEntity<Object> addExam(@RequestParam Long patientId, @RequestParam Long doctorId,
-			@RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+			@RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime dateTime) {
 		try {
-			return ResponseEntity.status(HttpStatus.OK).body(doctorService.addExam(patientId, doctorId, date));
+			return ResponseEntity.status(HttpStatus.OK).body(doctorService.addExam(patientId, doctorId, dateTime));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
@@ -72,9 +72,9 @@ public class DoctorController {
 
 	@DeleteMapping("/removeExam")
 	public @ResponseBody ResponseEntity<Object> removeExam(@RequestParam Long patientId, @RequestParam Long doctorId,
-			@RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+			@RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime dateTime) {
 		try {
-			return ResponseEntity.status(HttpStatus.OK).body(doctorService.removeExam(patientId, doctorId, date));
+			return ResponseEntity.status(HttpStatus.OK).body(doctorService.removeExam(patientId, doctorId, dateTime));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}

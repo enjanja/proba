@@ -1,6 +1,6 @@
 package com.example.demo.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -54,18 +54,18 @@ public class DoctorEntity extends UserEntity {
 		hospital.getDoctors().remove(this);
 	}
 
-	public void addExamination(PatientEntity patient, LocalDate date) {
-		ExaminationEntity examination = new ExaminationEntity(this, patient, date, "");
+	public void addExamination(PatientEntity patient, LocalDateTime dateTime) {
+		ExaminationEntity examination = new ExaminationEntity(this, patient, dateTime, "");
 		examinations.add(examination);
 		patient.getExaminations().add(examination);
 	}
 
-	public void removeExamination(PatientEntity patient, LocalDate date) {
+	public void removeExamination(PatientEntity patient, LocalDateTime dateTime) {
 		for (Iterator<ExaminationEntity> iterator = examinations.iterator(); iterator.hasNext();) {
 			ExaminationEntity examinationEntity = iterator.next();
 
 			if (examinationEntity.getDoctor().equals(this) && examinationEntity.getPatient().equals(patient)
-					&& examinationEntity.getId().getDate().equals(date)) {
+					&& examinationEntity.getId().getDateTime().equals(dateTime)) {
 				iterator.remove();
 				examinationEntity.getPatient().getExaminations().remove(examinationEntity);
 				examinationEntity.setDoctor(null);
