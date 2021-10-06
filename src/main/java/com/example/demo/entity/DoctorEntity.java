@@ -33,7 +33,7 @@ public class DoctorEntity extends UserEntity {
 	Set<HospitalEntity> hospitals = new HashSet<>();
 
 	@ManyToOne
-	@JoinColumn(name = "specialization_id", nullable = false)
+	@JoinColumn(name = "specialization_id", nullable = true)
 	private SpecializationEntity specialization;
 
 	@JsonIgnore
