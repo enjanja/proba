@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,7 +30,8 @@ public class SpecializationController {
 	 * @param dto object containing information about the hospital.
 	 */
 	@PostMapping
-	public ResponseEntity<String> save(@RequestBody SpecializationDTO dto) {
+	public ResponseEntity<String> save(@RequestBody SpecializationDTO dto,
+			@RequestHeader(name = "Authorization") String token) {
 		specializationService.save(dto);
 		return ResponseEntity.status(HttpStatus.OK).body("Successfully saved specialization.");
 	}

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +36,8 @@ public class PatientController {
 	 * @param id patient id
 	 */
 	@GetMapping("/{id}")
-	public @ResponseBody ResponseEntity<Object> findById(@PathVariable Long id) {
+	public @ResponseBody ResponseEntity<Object> findById(@PathVariable Long id,
+			@RequestHeader(name = "Authorization") String token) {
 
 		return ResponseEntity.status(HttpStatus.OK).body(patientService.findById(id));
 	}
@@ -44,7 +46,7 @@ public class PatientController {
 	 * Returns the list of all saved patients.
 	 */
 	@GetMapping
-	public @ResponseBody ResponseEntity<List<PatientDTO>> getAll() {
+	public @ResponseBody ResponseEntity<List<PatientDTO>> getAll(@RequestHeader(name = "Authorization") String token) {
 		return ResponseEntity.status(HttpStatus.OK).body(patientService.getAll());
 
 	}
@@ -55,7 +57,8 @@ public class PatientController {
 	 * @param dto object containing info about patient
 	 */
 	@PostMapping
-	public @ResponseBody ResponseEntity<Object> save(@RequestBody PatientDTO dto) {
+	public @ResponseBody ResponseEntity<Object> save(@RequestBody PatientDTO dto,
+			@RequestHeader(name = "Authorization") String token) {
 		patientService.save(dto);
 		return ResponseEntity.status(HttpStatus.OK).body("Patient successfully saved.");
 
@@ -67,7 +70,8 @@ public class PatientController {
 	 * @param patient object containing info about patient
 	 */
 	@PutMapping
-	public @ResponseBody ResponseEntity<Object> update(@RequestBody PatientDTO patient) {
+	public @ResponseBody ResponseEntity<Object> update(@RequestBody PatientDTO patient,
+			@RequestHeader(name = "Authorization") String token) {
 
 		patientService.update(patient);
 		return ResponseEntity.status(HttpStatus.OK).body("Patient successfully updated.");
@@ -79,7 +83,8 @@ public class PatientController {
 	 * @param id patient id
 	 */
 	@DeleteMapping("/{id}")
-	public @ResponseBody ResponseEntity<Object> delete(@PathVariable(name = "id") Long id) {
+	public @ResponseBody ResponseEntity<Object> delete(@PathVariable(name = "id") Long id,
+			@RequestHeader(name = "Authorization") String token) {
 		patientService.delete(id);
 		return ResponseEntity.status(HttpStatus.OK).body("Patient successfully deleted.");
 

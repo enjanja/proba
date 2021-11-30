@@ -30,8 +30,6 @@ public class UserDTO implements Serializable {
 	@Setter
 	protected String username;
 
-	@NotNull
-	@NotBlank
 	protected String password;
 
 	@NotNull

@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,7 +40,8 @@ public class ExaminationController {
 	 * @return
 	 */
 	@PutMapping()
-	public ResponseEntity<Object> updateDiagnosis(@RequestBody UpdateDTO dto) {
+	public ResponseEntity<Object> updateDiagnosis(@RequestBody UpdateDTO dto,
+			@RequestHeader(name = "Authorization") String token) {
 		examinationService.updateDiagnosis(dto);
 		return ResponseEntity.status(HttpStatus.OK).body("Successfully added diagnosis.");
 	}
