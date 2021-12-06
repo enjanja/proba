@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -25,11 +26,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.DoctorDTO;
+import com.example.demo.dto.DoctorSimpleDTO;
 import com.example.demo.dto.UserDTO;
 import com.example.demo.service.DoctorService;
 
 @RestController
-@RequestMapping(path = "/doctor")
+@RequestMapping(path = "/doctors")
 public class DoctorController {
 
 	DoctorService doctorService;
@@ -41,14 +43,22 @@ public class DoctorController {
 	}
 
 	/**
-	 * Returns doctor from db.
+	 * Returns doctor from db. RADI!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	 * 
 	 * @param id doctor id
 	 */
-	@GetMapping("/profile")
-	public @ResponseBody ResponseEntity<Object> getDoctor(@RequestHeader(name = "Authorization") String token) {
+	@GetMapping("{username}")
+	public @ResponseBody ResponseEntity<Object> getDoctor(@RequestHeader(name = "Authorization") String token,
+			@PathVariable String username) {
 
-		return ResponseEntity.status(HttpStatus.OK).body(doctorService.findByUsername(token));
+		return ResponseEntity.status(HttpStatus.OK).body(doctorService.findByUsername(token, username));
+	}
+
+	@GetMapping
+	public @ResponseBody ResponseEntity<List<DoctorSimpleDTO>> getAll(
+			@RequestHeader(name = "Authorization") String token) {
+		return ResponseEntity.status(HttpStatus.OK).body(doctorService.getAll(token));
+
 	}
 
 	/**
@@ -110,8 +120,7 @@ public class DoctorController {
 	 */
 	@PostMapping("/addExam")
 	public @ResponseBody ResponseEntity<Object> addExam(@RequestParam Long patientId, @RequestParam Long doctorId,
-
-			@RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime dateTime,
+			@RequestParam(name = "dateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime,
 			@RequestHeader(name = "Authorization") String token) {
 		doctorService.addExam(patientId, doctorId, dateTime, token);
 		return ResponseEntity.status(HttpStatus.OK).body("Successfully added examination.");
@@ -127,10 +136,11 @@ public class DoctorController {
 	 */
 	@DeleteMapping("/removeExam")
 	public @ResponseBody ResponseEntity<Object> removeExam(@RequestParam Long patientId, @RequestParam Long doctorId,
-			@RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime dateTime,
+			@RequestParam(name = "dateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime,
 			@RequestHeader(name = "Authorization") String token) {
-		doctorService.removeExam(patientId, doctorId, dateTime, token);
-		return ResponseEntity.status(HttpStatus.OK).body("Successfully removed examination.");
+
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(doctorService.removeExam(patientId, doctorId, dateTime, token));
 
 	}
 

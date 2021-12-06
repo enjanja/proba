@@ -54,12 +54,19 @@ public class ExaminationEntity {
 			return false;
 
 		ExaminationEntity that = (ExaminationEntity) o;
-		return Objects.equals(id, that.id);
+		return (patient.equals(that.patient) && doctor.equals(that.doctor)
+				&& id.getDateTime().equals(that.getId().getDateTime()));
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
+	}
+
+	@Override
+	public String toString() {
+		return "ExaminationEntity [id=" + id + ", patient=" + patient + ", doctor=" + doctor + ", diagnosis="
+				+ diagnosis + "]";
 	}
 
 }

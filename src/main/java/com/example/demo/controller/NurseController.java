@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -49,16 +48,16 @@ public class NurseController {
 
 	}
 
-	/**
-	 * Saves a nurse to the db.
-	 * 
-	 * @param nurseDTO object containing info about the nurse.
-	 */
-	@PostMapping
-	public @ResponseBody ResponseEntity<Object> save(@RequestBody NurseDTO nurseDTO) {
-		nurseService.save(nurseDTO);
-		return ResponseEntity.status(HttpStatus.OK).body("Successfully saved nurse.");
-	}
+//	/**
+//	 * Saves a nurse to the db.
+//	 * 
+//	 * @param nurseDTO object containing info about the nurse.
+//	 */
+//	@PostMapping
+//	public @ResponseBody ResponseEntity<Object> save(@RequestBody NurseDTO nurseDTO) {
+//		nurseService.save(nurseDTO);
+//		return ResponseEntity.status(HttpStatus.OK).body("Successfully saved nurse.");
+//	}
 
 	/**
 	 * Updates the nurse.
@@ -79,7 +78,7 @@ public class NurseController {
 	 * @param id nurse id
 	 */
 	@GetMapping("/profile")
-	public @ResponseBody ResponseEntity<Object> getDoctor(@RequestHeader(name = "Authorization") String token) {
+	public @ResponseBody ResponseEntity<Object> getNurse(@RequestHeader(name = "Authorization") String token) {
 
 		return ResponseEntity.status(HttpStatus.OK).body(nurseService.findByUsername(token));
 	}

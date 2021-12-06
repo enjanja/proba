@@ -53,7 +53,9 @@ public class NurseService {
 			throw new ResourceNotFoundException("Nurse doesn't exist");
 		}
 
-		return nurseEntityDtoMapper.toDto(entity.get());
+		NurseDTO dto = nurseEntityDtoMapper.toDto(entity.get());
+		dto.setPassword("");
+		return dto;
 	}
 
 	public List<NurseDTO> getAll() {

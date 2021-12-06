@@ -11,11 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.DoctorDTO;
+import com.example.demo.dto.DoctorSimpleDTO;
+import com.example.demo.dto.SpecializationDTO;
 import com.example.demo.dto.UserDTO;
 import com.example.demo.entity.DoctorEntity;
 import com.example.demo.entity.ExaminationEntity;
 import com.example.demo.entity.NurseEntity;
 import com.example.demo.entity.PatientEntity;
+import com.example.demo.entity.UserEntity;
+import com.example.demo.exception.ForbiddenException;
+import com.example.demo.exception.InvalidDateExcpetion;
 import com.example.demo.exception.ResourceAlreadyExistsException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.mapper.DoctorEntityDtoMapper;
@@ -25,6 +30,7 @@ import com.example.demo.repository.DoctorRepository;
 import com.example.demo.repository.HospitalRepozitory;
 import com.example.demo.repository.NurseRepository;
 import com.example.demo.repository.PatientRepository;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.util.JwtUtil;
 
 @Service
@@ -32,6 +38,7 @@ import com.example.demo.util.JwtUtil;
 public class DoctorService {
 	DoctorRepository doctorRepository;
 	NurseRepository nurseRepository;
+	UserRepository userRepository;
 	DoctorEntityDtoMapper doctorMapper;
 	ExaminationEntityDtoMapper examinationMapper;
 	PatientRepository patientRepository;
@@ -44,7 +51,7 @@ public class DoctorService {
 	public DoctorService(DoctorRepository doctorRepository, DoctorEntityDtoMapper doctorEntityDtoMapper,
 			HospitalRepozitory hospitalRepozitory, HospitalEntityDtoMapper hospitalMapper,
 			ExaminationEntityDtoMapper examinationMapper, PatientRepository patientRepository, JwtUtil jwt,
-			NurseRepository nurseRepository) {
+			NurseRepository nurseRepository, UserRepository userRepository) {
 		super();
 		this.doctorRepository = doctorRepository;
 		this.hospitalRepozitory = hospitalRepozitory;
@@ -54,28 +61,38 @@ public class DoctorService {
 		this.patientRepository = patientRepository;
 		this.jwt = jwt;
 		this.nurseRepository = nurseRepository;
+		this.userRepository = userRepository;
 	}
 
-	public DoctorDTO findByUsername(String token) {
+	public DoctorDTO findByUsername(String token, String username) {
 
-		String username = jwt.extractUsername(token);
-		Optional<DoctorEntity> entity = doctorRepository.findByUsername(username);
-		if (entity.isEmpty()) {
-			throw new ResourceNotFoundException("Doctor doesn't exist");
+		String adminUsername = jwt.extractUsername(token);
+		Optional<UserEntity> adminEntity = userRepository.findByUsername(adminUsername);
+		Optional<NurseEntity> nurseEntity = nurseRepository.findByUsername(adminUsername);
+
+		if (adminEntity.isPresent() && adminEntity.get().getUsername().equals(username) == false
+				&& nurseEntity.isEmpty()) {
+			throw new ForbiddenException("You don't have permission for this action");
 		}
 
-		return doctorMapper.toDto(entity.get());
+		Optional<DoctorEntity> doctor = doctorRepository.findByUsername(username);
+		DoctorDTO dto = doctorMapper.toDto(doctor.get());
+		dto.setPassword("");
+		return dto;
+
 	}
 
 	// TODO
-	public List<DoctorDTO> getAll(String token) {
+	public List<DoctorSimpleDTO> getAll(String token) {
 		String username = jwt.extractUsername(token);
 		Optional<NurseEntity> nurseEntity = nurseRepository.findByUsername(username);
 		if (nurseEntity.isEmpty()) {
 			throw new ResourceNotFoundException("User: " + username + " is not a nurse!");
 		}
 
-		return doctorRepository.findAll().stream().map(entity -> doctorMapper.toDto(entity))
+		return doctorRepository.findAll().stream().map(entity -> new DoctorSimpleDTO(entity.getId(), entity.getName(),
+				entity.getUsername(),
+				new SpecializationDTO(entity.getSpecialization().getId(), entity.getSpecialization().getName())))
 				.collect(Collectors.toList());
 	}
 
@@ -133,6 +150,10 @@ public class DoctorService {
 	// samo sestra bi trebalo da dodaje i brise examove, mozda izmestiti u nurse
 	// service
 	public DoctorDTO addExam(Long patientId, Long doctorId, LocalDateTime dateTime, String token) {
+
+		if (dateTime.isBefore(LocalDateTime.now())) {
+			throw new InvalidDateExcpetion("Entered date is in past.");
+		}
 
 		String username = jwt.extractUsername(token);
 		Optional<NurseEntity> nurseEntity = nurseRepository.findByUsername(username);

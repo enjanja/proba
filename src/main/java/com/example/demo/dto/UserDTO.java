@@ -32,7 +32,6 @@ public class UserDTO implements Serializable {
 
 	protected String password;
 
-	@NotNull
 	@NotBlank
 	@Size(max = 255)
 	protected String name;
