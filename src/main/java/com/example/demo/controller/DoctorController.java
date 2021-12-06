@@ -56,6 +56,8 @@ public class DoctorController {
 	 * 
 	 * @param dto object containing doctor information.
 	 */
+
+	// Dodaj validaciju u DTO
 	@PutMapping
 	public ResponseEntity<Object> update(@RequestBody @Valid UserDTO dto,
 			@RequestHeader(name = "Authorization") String token, BindingResult bindingResult) {

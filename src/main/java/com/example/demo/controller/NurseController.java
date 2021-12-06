@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +35,7 @@ public class NurseController {
 	 * @param id nurse id
 	 */
 	@GetMapping("/{id}")
-	public @ResponseBody ResponseEntity<Object> findById(@PathVariable Long id) {
+	public @ResponseBody ResponseEntity<Object> getNurse(@PathVariable Long id) {
 
 		return ResponseEntity.status(HttpStatus.OK).body(nurseService.findById(id));
 	}
@@ -65,10 +66,22 @@ public class NurseController {
 	 * @param dto object containing info about the nurse
 	 */
 	@PutMapping
-	public @ResponseBody ResponseEntity<Object> update(@RequestBody NurseDTO dto) {
-		nurseService.update(dto);
+	public @ResponseBody ResponseEntity<Object> update(@RequestBody NurseDTO dto,
+			@RequestHeader(name = "Authorization") String token) {
+		nurseService.update(dto, token);
 		return ResponseEntity.status(HttpStatus.OK).body("Successfully updated the nurse.");
 
+	}
+
+	/**
+	 * Returns nurse from db.
+	 * 
+	 * @param id nurse id
+	 */
+	@GetMapping("/profile")
+	public @ResponseBody ResponseEntity<Object> getDoctor(@RequestHeader(name = "Authorization") String token) {
+
+		return ResponseEntity.status(HttpStatus.OK).body(nurseService.findByUsername(token));
 	}
 
 }

@@ -11,11 +11,16 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.ExaminationDTO;
 import com.example.demo.dto.UpdateDTO;
+import com.example.demo.entity.DoctorEntity;
 import com.example.demo.entity.ExaminationEntity;
 import com.example.demo.entity.ExaminationId;
+import com.example.demo.entity.NurseEntity;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.mapper.ExaminationEntityDtoMapper;
+import com.example.demo.repository.DoctorRepository;
 import com.example.demo.repository.ExaminationRepository;
+import com.example.demo.repository.NurseRepository;
+import com.example.demo.util.JwtUtil;
 
 @Service
 @Transactional
@@ -23,14 +28,30 @@ public class ExaminationService {
 
 	ExaminationRepository examinationRepository;
 	ExaminationEntityDtoMapper mapper;
+	DoctorRepository doctorRepository;
+	NurseRepository nurseRepository;
+	JwtUtil jwt;
 
 	@Autowired
-	public ExaminationService(ExaminationRepository examinationRepository, ExaminationEntityDtoMapper mapper) {
+	public ExaminationService(ExaminationRepository examinationRepository, ExaminationEntityDtoMapper mapper,
+			DoctorRepository doctorRepository, NurseRepository nurseRepository, JwtUtil jwt) {
+		this.doctorRepository = doctorRepository;
+		this.nurseRepository = nurseRepository;
+		this.jwt = jwt;
 		this.examinationRepository = examinationRepository;
 		this.mapper = mapper;
 	}
 
-	public Optional<ExaminationDTO> findById(ExaminationId id) {
+	public Optional<ExaminationDTO> findById(ExaminationId id, String token) {
+		String username = jwt.extractUsername(token);
+
+		Optional<DoctorEntity> entityDoctor = doctorRepository.findByUsername(username);
+		Optional<NurseEntity> entityNurse = nurseRepository.findByUsername(username);
+
+		if (entityDoctor.isEmpty() && entityNurse.isEmpty()) {
+			throw new ResourceNotFoundException("You don't have permission for this action.");
+		}
+
 		Optional<ExaminationEntity> entity = examinationRepository.findById(id);
 		if (entity.isPresent()) {
 			return Optional.of(mapper.toDto(entity.get()));
@@ -38,8 +59,18 @@ public class ExaminationService {
 		return Optional.empty();
 	}
 
-	public List<ExaminationDTO> getAll() {
-		return examinationRepository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
+	public List<ExaminationDTO> getAll(Long doctorId, String token) {
+
+		String username = jwt.extractUsername(token);
+
+		Optional<DoctorEntity> entityDoctor = doctorRepository.findById(doctorId);
+		Optional<NurseEntity> entityNurse = nurseRepository.findByUsername(username);
+
+		if ((entityDoctor.isEmpty() && entityNurse.isEmpty()) || (entityDoctor.get().getUsername() != username)) {
+			throw new ResourceNotFoundException("You don't have permission for this action.");
+		}
+		return examinationRepository.findByDoctor(entityDoctor.get()).stream().map(mapper::toDto)
+				.collect(Collectors.toList());
 	}
 
 	public ExaminationDTO save(ExaminationDTO dto) {
@@ -47,7 +78,15 @@ public class ExaminationService {
 		return dto;
 	}
 
-	public ExaminationDTO updateDiagnosis(UpdateDTO dto) {
+	public ExaminationDTO updateDiagnosis(UpdateDTO dto, String token) {
+		String username = jwt.extractUsername(token);
+
+		Optional<DoctorEntity> entityDoctor = doctorRepository.findByUsername(username);
+		Optional<NurseEntity> entityNurse = nurseRepository.findByUsername(username);
+
+		if (entityDoctor.isEmpty() && entityNurse.isEmpty()) {
+			throw new ResourceNotFoundException("You don't have permission for this action.");
+		}
 		Optional<ExaminationEntity> existingExam = examinationRepository
 				.findById(new ExaminationId(dto.getDoctorId(), dto.getPatientId(), dto.getDateTime()));
 		if (existingExam.isEmpty()) {

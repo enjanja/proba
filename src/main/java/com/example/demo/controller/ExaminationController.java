@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.UpdateDTO;
@@ -28,9 +29,10 @@ public class ExaminationController {
 	 * Returns a list of all existing doctors.
 	 */
 	@GetMapping()
-	public ResponseEntity<Object> getAll() {
+	public ResponseEntity<Object> getAll(@RequestHeader(name = "Authorization") String token,
+			@RequestParam Long doctorId) {
 
-		return ResponseEntity.status(HttpStatus.OK).body(examinationService.getAll());
+		return ResponseEntity.status(HttpStatus.OK).body(examinationService.getAll(doctorId, token));
 	}
 
 	/**
@@ -42,7 +44,7 @@ public class ExaminationController {
 	@PutMapping()
 	public ResponseEntity<Object> updateDiagnosis(@RequestBody UpdateDTO dto,
 			@RequestHeader(name = "Authorization") String token) {
-		examinationService.updateDiagnosis(dto);
+		examinationService.updateDiagnosis(dto, token);
 		return ResponseEntity.status(HttpStatus.OK).body("Successfully added diagnosis.");
 	}
 

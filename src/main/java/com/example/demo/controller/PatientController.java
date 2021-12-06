@@ -39,7 +39,7 @@ public class PatientController {
 	public @ResponseBody ResponseEntity<Object> findById(@PathVariable Long id,
 			@RequestHeader(name = "Authorization") String token) {
 
-		return ResponseEntity.status(HttpStatus.OK).body(patientService.findById(id));
+		return ResponseEntity.status(HttpStatus.OK).body(patientService.findById(id, token));
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class PatientController {
 	 */
 	@GetMapping
 	public @ResponseBody ResponseEntity<List<PatientDTO>> getAll(@RequestHeader(name = "Authorization") String token) {
-		return ResponseEntity.status(HttpStatus.OK).body(patientService.getAll());
+		return ResponseEntity.status(HttpStatus.OK).body(patientService.getAll(token));
 
 	}
 
@@ -59,7 +59,7 @@ public class PatientController {
 	@PostMapping
 	public @ResponseBody ResponseEntity<Object> save(@RequestBody PatientDTO dto,
 			@RequestHeader(name = "Authorization") String token) {
-		patientService.save(dto);
+		patientService.save(dto, token);
 		return ResponseEntity.status(HttpStatus.OK).body("Patient successfully saved.");
 
 	}
@@ -73,7 +73,7 @@ public class PatientController {
 	public @ResponseBody ResponseEntity<Object> update(@RequestBody PatientDTO patient,
 			@RequestHeader(name = "Authorization") String token) {
 
-		patientService.update(patient);
+		patientService.update(patient, token);
 		return ResponseEntity.status(HttpStatus.OK).body("Patient successfully updated.");
 	}
 
@@ -85,7 +85,7 @@ public class PatientController {
 	@DeleteMapping("/{id}")
 	public @ResponseBody ResponseEntity<Object> delete(@PathVariable(name = "id") Long id,
 			@RequestHeader(name = "Authorization") String token) {
-		patientService.delete(id);
+		patientService.delete(id, token);
 		return ResponseEntity.status(HttpStatus.OK).body("Patient successfully deleted.");
 
 	}

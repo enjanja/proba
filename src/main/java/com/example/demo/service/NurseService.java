@@ -16,6 +16,7 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.mapper.HospitalEntityDtoMapper;
 import com.example.demo.mapper.NurseEntityDtoMapper;
 import com.example.demo.repository.NurseRepository;
+import com.example.demo.util.JwtUtil;
 
 @Service
 @Transactional
@@ -24,14 +25,16 @@ public class NurseService {
 	NurseRepository nurseRepository;
 	NurseEntityDtoMapper nurseEntityDtoMapper;
 	HospitalEntityDtoMapper hospitalMapper;
+	JwtUtil jwt;
 
 	@Autowired
 	public NurseService(NurseRepository nurseRepository, NurseEntityDtoMapper nurseEntityDtoMapper,
-			HospitalEntityDtoMapper hospitalMapper) {
+			HospitalEntityDtoMapper hospitalMapper, JwtUtil jwtUtil) {
 		super();
 		this.nurseRepository = nurseRepository;
 		this.nurseEntityDtoMapper = nurseEntityDtoMapper;
 		this.hospitalMapper = hospitalMapper;
+		this.jwt = jwtUtil;
 	}
 
 	public NurseDTO findById(Long id) {
@@ -41,6 +44,16 @@ public class NurseService {
 		}
 
 		return nurseEntityDtoMapper.toDto(nurse.get());
+	}
+
+	public NurseDTO findByUsername(String token) {
+		String username = jwt.extractUsername(token);
+		Optional<NurseEntity> entity = nurseRepository.findByUsername(username);
+		if (entity.isEmpty()) {
+			throw new ResourceNotFoundException("Nurse doesn't exist");
+		}
+
+		return nurseEntityDtoMapper.toDto(entity.get());
 	}
 
 	public List<NurseDTO> getAll() {
@@ -57,17 +70,23 @@ public class NurseService {
 		return nurseEntityDtoMapper.toDto(nurse);
 	}
 
-	public NurseDTO update(NurseDTO dto) {
+	public NurseDTO update(NurseDTO dto, String token) {
 		Optional<NurseEntity> existingNurse = nurseRepository.findById(dto.getId());
 		if (existingNurse.isEmpty()) {
 			throw new ResourceNotFoundException("Nurse doesn't exist.");
 		}
 
+		String username = jwt.extractUsername(token);
+		Optional<NurseEntity> entity = nurseRepository.findByUsername(username);
+		if (entity.isEmpty()) {
+			throw new ResourceNotFoundException("Nurse doesn't exist");
+		}
+
 		NurseEntity nurse = existingNurse.get();
 		nurse.setName(dto.getName());
 		nurse.setUsername(dto.getUsername());
-		nurse.setPassword(dto.getPassword());
-		nurse.setHospital(hospitalMapper.toEntity(dto.getHospital()));
+//		nurse.setPassword(dto.getPassword());
+//		nurse.setHospital(hospitalMapper.toEntity(dto.getHospital()));
 
 		return nurseEntityDtoMapper.toDto(nurseRepository.save(nurse));
 	}
