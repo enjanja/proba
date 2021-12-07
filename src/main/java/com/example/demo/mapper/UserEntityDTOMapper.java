@@ -6,10 +6,8 @@ import com.example.demo.dto.UserDTO;
 import com.example.demo.entity.UserEntity;
 
 @Mapper(componentModel = "spring")
-public interface UserEntityDTOMapper {
-
+public interface UserEntityDtoMapper {
 	UserDTO toDTO(UserEntity entity);
 
 	UserEntity toEntity(UserDTO user);
-
 }

@@ -7,7 +7,7 @@ import com.example.demo.dto.NurseDTO;
 import com.example.demo.entity.NurseEntity;
 
 @Mapper(componentModel = "spring", uses = {
-		UseEntityDtoMapper.class }, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+		UserEntityDtoMapper.class }, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface NurseEntityDtoMapper {
 
 	NurseDTO toDto(NurseEntity nurse);
