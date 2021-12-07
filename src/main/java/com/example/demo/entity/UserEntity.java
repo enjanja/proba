@@ -35,3 +35,4 @@ public class UserEntity {
 	String name;
 	Boolean active;
 }
+

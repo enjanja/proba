@@ -11,5 +11,4 @@ import com.example.demo.entity.NurseEntity;
 public interface NurseRepository extends JpaRepository<NurseEntity, Long> {
 
 	public Optional<NurseEntity> findByUsername(String username);
-
 }

@@ -27,4 +27,5 @@ public class NurseEntity extends UserEntity {
 		super(id, username, password, name, active);
 		this.hospital = hospital;
 	}
+
 }
