@@ -14,10 +14,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -32,6 +33,7 @@ public class DoctorEntity extends UserEntity {
 	@JoinTable(name = "hospital_doctor", joinColumns = @JoinColumn(name = "doctor_id"), inverseJoinColumns = @JoinColumn(name = "hospital_id"))
 	Set<HospitalEntity> hospitals = new HashSet<>();
 
+
 	@ManyToOne
 	@JoinColumn(name = "specialization_id", nullable = true)
 	private SpecializationEntity specialization;
@@ -44,6 +46,7 @@ public class DoctorEntity extends UserEntity {
 			Boolean active) {
 		super(id, username, password, name, active);
 		this.hospitals = hospitals;
+		this.specialization = specialization;
 	}
 
 	public void addHospital(HospitalEntity hospital) {
