@@ -23,13 +23,8 @@ public class DoctorDTO extends UserDTO {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
 	private Set<HospitalDTO> hospitals;
 	private Set<ExaminationDTO> examinations;
-	private SimpleSpecializationDTO specialization;
-
-//	private SpecializationDTO specialization;
-//	private int specialization_id; // SpecializationDTO specialization
-//	private Set<ExaminationDTO> examinations;
+	private SpecializationDTO specialization;
 
 }

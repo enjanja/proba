@@ -1,11 +1,12 @@
 package com.example.demo.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
@@ -25,23 +26,22 @@ public class ExaminationEntity {
 	private ExaminationId id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@MapsId("patient_id")
+	@MapsId("patientId")
+	@JoinColumn(name = "patient_id")
 	private PatientEntity patient;
 
 	@ManyToOne
-	@MapsId("doctor_id")
+	@MapsId("doctorId")
+	@JoinColumn(name = "doctor_id")
 	private DoctorEntity doctor;
-
-//	private LocalDate date;
 
 	private String diagnosis;
 
-	public ExaminationEntity(DoctorEntity doctor, PatientEntity patient, LocalDate date, String diagnosis) {
+	public ExaminationEntity(DoctorEntity doctor, PatientEntity patient, LocalDateTime dateTime, String diagnosis) {
 		super();
-		this.id = new ExaminationId(doctor.getId(), patient.getId(), date);
+		this.id = new ExaminationId(doctor.getId(), patient.getId(), dateTime);
 		this.patient = patient;
 		this.doctor = doctor;
-//		this.date = date;
 		this.diagnosis = diagnosis;
 	}
 
@@ -54,12 +54,19 @@ public class ExaminationEntity {
 			return false;
 
 		ExaminationEntity that = (ExaminationEntity) o;
-		return Objects.equals(id, that.id);
+		return (patient.equals(that.patient) && doctor.equals(that.doctor)
+				&& id.getDateTime().equals(that.getId().getDateTime()));
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
+	}
+
+	@Override
+	public String toString() {
+		return "ExaminationEntity [id=" + id + ", patient=" + patient + ", doctor=" + doctor + ", diagnosis="
+				+ diagnosis + "]";
 	}
 
 }

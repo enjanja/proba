@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -31,7 +31,7 @@ public class ExaminationId implements Serializable {
 	private Long patientId;
 
 	@Column(name = "date")
-	private LocalDate date;
+	private LocalDateTime dateTime;
 
 	@Override
 	public boolean equals(Object o) {
@@ -43,11 +43,17 @@ public class ExaminationId implements Serializable {
 
 		ExaminationId that = (ExaminationId) o;
 		return Objects.equals(doctorId, that.doctorId) && Objects.equals(patientId, that.patientId)
-				&& Objects.equals(date, that.date);
+				&& Objects.equals(dateTime, that.dateTime);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(doctorId, patientId, date);
+		return Objects.hash(doctorId, patientId, dateTime);
+	}
+
+	public ExaminationId(Long doctorId, Long patientId) {
+		super();
+		this.doctorId = doctorId;
+		this.patientId = patientId;
 	}
 }

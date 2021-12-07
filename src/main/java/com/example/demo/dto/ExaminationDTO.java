@@ -1,6 +1,7 @@
 package com.example.demo.dto;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import com.example.demo.entity.ExaminationId;
 
@@ -19,10 +20,16 @@ public class ExaminationDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private ExaminationId id;
-//	private DoctorSimpleDTO doctor;
-//	private PatientSimpleDTO patient;
-	private DoctorDTO doctor;
-	private PatientDTO patient;
-//	private LocalDate date;
+	private DoctorSimpleDTO doctor;
+	private PatientSimpleDTO patient;
 	private String diagnosis;
+
+	public ExaminationDTO(DoctorSimpleDTO doctor, PatientSimpleDTO patient, LocalDateTime dateTime, String diagnosis) {
+		super();
+		this.id = new ExaminationId(doctor.getId(), patient.getId(), dateTime);
+		this.diagnosis = diagnosis;
+		this.doctor = doctor;
+		this.patient = patient;
+	}
+
 }

@@ -10,66 +10,127 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.PatientDTO;
+import com.example.demo.entity.DoctorEntity;
+import com.example.demo.entity.NurseEntity;
 import com.example.demo.entity.PatientEntity;
+import com.example.demo.exception.ResourceAlreadyExistsException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.mapper.PatientEntityDtoMapper;
+import com.example.demo.repository.DoctorRepository;
+import com.example.demo.repository.NurseRepository;
 import com.example.demo.repository.PatientRepository;
+import com.example.demo.util.JwtUtil;
 
 @Service
 @Transactional
 public class PatientService {
 
 	PatientRepository patientRepository;
+	DoctorRepository doctorRepository;
+	NurseRepository nurseRepository;
 	PatientEntityDtoMapper patientEntityDtoMapper;
+	JwtUtil jwt;
 
 	@Autowired
-	public PatientService(PatientRepository patientRepository, PatientEntityDtoMapper patientEntityDtoMapper) {
+	public PatientService(PatientRepository patientRepository, PatientEntityDtoMapper patientEntityDtoMapper,
+			JwtUtil jwt, DoctorRepository doctorRepository, NurseRepository nurseRepository) {
 		super();
 		this.patientRepository = patientRepository;
 		this.patientEntityDtoMapper = patientEntityDtoMapper;
+		this.jwt = jwt;
+		this.doctorRepository = doctorRepository;
+		this.nurseRepository = nurseRepository;
 	}
 
-	public Optional<PatientDTO> findById(Long id) {
-		Optional<PatientEntity> entity = patientRepository.findById(id);
-		if (entity.isPresent()) {
-			return Optional.of(patientEntityDtoMapper.toDto(entity.get()));
+	public PatientDTO findById(Long id, String token) {
+
+		String username = jwt.extractUsername(token);
+
+		Optional<DoctorEntity> entity = doctorRepository.findByUsername(username);
+		Optional<NurseEntity> entityNurse = nurseRepository.findByUsername(username);
+
+		if (entity.isEmpty() && entityNurse.isEmpty()) {
+			throw new ResourceNotFoundException("You don't have permission for this action.");
 		}
-		return Optional.empty();
+
+		Optional<PatientEntity> patientEntity = patientRepository.findById(id);
+		if (patientEntity.isEmpty()) {
+			throw new ResourceNotFoundException("Patient doesn't exist.");
+		}
+		return patientEntityDtoMapper.toDto(patientEntity.get());
 	}
 
-	public List<PatientDTO> getAll() {
+	public List<PatientDTO> getAll(String token) {
+		String username = jwt.extractUsername(token);
+
+		Optional<DoctorEntity> entityDoctor = doctorRepository.findByUsername(username);
+		Optional<NurseEntity> entityNurse = nurseRepository.findByUsername(username);
+
+		if (entityDoctor.isEmpty() && entityNurse.isEmpty()) {
+			throw new ResourceNotFoundException("You don't have permission for this action.");
+		}
+
 		List<PatientEntity> entities = patientRepository.findAll();
 		return entities.stream().map(entity -> {
 			return patientEntityDtoMapper.toDto(entity);
 		}).collect(Collectors.toList());
 	}
 
-	public PatientDTO save(PatientDTO dto) throws Exception {
-		Optional<PatientEntity> entity = patientRepository.findById(dto.getId());
-		if (entity.isPresent()) {
-			throw new Exception("Patient already exists");
+	public PatientDTO save(PatientDTO dto, String token) {
+		String username = jwt.extractUsername(token);
+
+		Optional<NurseEntity> entityNurse = nurseRepository.findByUsername(username);
+
+		if (entityNurse.isEmpty()) {
+			throw new ResourceNotFoundException("You don't have permission for this action.");
 		}
-		PatientEntity nurse = patientRepository.save(patientEntityDtoMapper.toEntity(dto));
-		return patientEntityDtoMapper.toDto(nurse);
+
+		Optional<PatientEntity> entity = patientRepository.findByJmbg(dto.getJmbg());
+		if (entity.isPresent()) {
+			throw new ResourceAlreadyExistsException(dto.getJmbg(), "Patient with this jmbg already exists");
+		}
+		PatientEntity patient = patientRepository.save(patientEntityDtoMapper.toEntity(dto));
+		return patientEntityDtoMapper.toDto(patient);
 	}
 
-	// nope
+	public PatientDTO update(PatientDTO dto, String token) {
+		String username = jwt.extractUsername(token);
 
-	public Optional<PatientDTO> update(PatientDTO dto) {
-		Optional<PatientEntity> entity = patientRepository.findById(dto.getId());
-		if (entity.isPresent()) {
-			PatientEntity patient = patientRepository.save(patientEntityDtoMapper.toEntity(dto));
-			return Optional.of(patientEntityDtoMapper.toDto(patient));
+		Optional<NurseEntity> entityNurse = nurseRepository.findByUsername(username);
+
+		if (entityNurse.isEmpty()) {
+			throw new ResourceNotFoundException("You don't have permission for this action.");
 		}
-		return Optional.empty();
+
+		Optional<PatientEntity> entity = patientRepository.findById(dto.getId());
+		if (entity.isEmpty()) {
+			throw new ResourceNotFoundException("Patient doesn't exist!");
+		}
+		entity.get().setName(dto.getName());
+
+		PatientEntity patient = patientRepository.save(entity.get());
+		return patientEntityDtoMapper.toDto(patient);
+
 	}
 
-	public PatientDTO delete(Long id) throws Exception {
-		Optional<PatientEntity> studentEntity = patientRepository.findById(id);
-		if (studentEntity.isPresent()) {
-			patientRepository.delete(studentEntity.get());
-			return patientEntityDtoMapper.toDto(studentEntity.get());
+	public PatientDTO delete(Long id, String token) {
+		String username = jwt.extractUsername(token);
+
+		Optional<NurseEntity> entityNurse = nurseRepository.findByUsername(username);
+
+		if (entityNurse.isEmpty()) {
+			throw new ResourceNotFoundException("You don't have permission for this action.");
 		}
-		throw new Exception("Patient with id " + id + " does not exist!");
+
+		Optional<PatientEntity> patientEntity = patientRepository.findById(id);
+		if (patientEntity.isEmpty()) {
+			throw new ResourceNotFoundException("Patient with id " + id + " does not exist!");
+		}
+
+		patientRepository.delete(patientEntity.get());
+
+		return patientEntityDtoMapper.toDto(patientEntity.get());
+
 	}
 
 }

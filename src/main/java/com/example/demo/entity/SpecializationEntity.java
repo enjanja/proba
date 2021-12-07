@@ -26,6 +26,4 @@ public class SpecializationEntity {
 
 	private String name;
 
-	@OneToMany(mappedBy = "specialization")
-	private Set<DoctorEntity> doctors;
 }

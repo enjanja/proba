@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,53 +30,64 @@ public class PatientController {
 		this.patientService = patientService;
 	}
 
+	/**
+	 * Gets patient from db.
+	 * 
+	 * @param id patient id
+	 */
 	@GetMapping("/{id}")
-	public @ResponseBody ResponseEntity<Object> findById(@PathVariable Long id) {
-		Optional<PatientDTO> dto = patientService.findById(id);
-		if (dto.isPresent()) {
-			return ResponseEntity.status(HttpStatus.OK).body(dto.get());
-		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient with id " + id + " does not exist!");
-		}
+	public @ResponseBody ResponseEntity<Object> findById(@PathVariable Long id,
+			@RequestHeader(name = "Authorization") String token) {
+
+		return ResponseEntity.status(HttpStatus.OK).body(patientService.findById(id, token));
 	}
 
+	/**
+	 * Returns the list of all saved patients.
+	 */
 	@GetMapping
-	public @ResponseBody ResponseEntity<List<PatientDTO>> getAll() throws Exception {
-		return ResponseEntity.status(HttpStatus.OK).body(patientService.getAll());
+	public @ResponseBody ResponseEntity<List<PatientDTO>> getAll(@RequestHeader(name = "Authorization") String token) {
+		return ResponseEntity.status(HttpStatus.OK).body(patientService.getAll(token));
 
 	}
 
+	/**
+	 * Saves patient in db.
+	 * 
+	 * @param dto object containing info about patient
+	 */
 	@PostMapping
-	public @ResponseBody ResponseEntity<Object> save(@RequestBody PatientDTO dto) {
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(patientService.save(dto));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-		}
+	public @ResponseBody ResponseEntity<Object> save(@RequestBody PatientDTO dto,
+			@RequestHeader(name = "Authorization") String token) {
+		patientService.save(dto, token);
+		return ResponseEntity.status(HttpStatus.OK).body("Patient successfully saved.");
+
 	}
 
+	/**
+	 * Updates patient in db.
+	 * 
+	 * @param patient object containing info about patient
+	 */
 	@PutMapping
-	public @ResponseBody ResponseEntity<Object> update(@RequestBody PatientDTO patient) {
-		try {
-			Optional<PatientDTO> dto = patientService.update(patient);
-			if (dto.isPresent()) {
-				return ResponseEntity.status(HttpStatus.OK).body(dto);
-			} else {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dto);
-			}
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		}
+	public @ResponseBody ResponseEntity<Object> update(@RequestBody PatientDTO patient,
+			@RequestHeader(name = "Authorization") String token) {
 
+		patientService.update(patient, token);
+		return ResponseEntity.status(HttpStatus.OK).body("Patient successfully updated.");
 	}
 
+	/**
+	 * Deletes patient from db.
+	 * 
+	 * @param id patient id
+	 */
 	@DeleteMapping("/{id}")
-	public @ResponseBody ResponseEntity<Object> delete(@PathVariable(name = "id") Long id) {
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(patientService.delete(id));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-		}
+	public @ResponseBody ResponseEntity<Object> delete(@PathVariable(name = "id") Long id,
+			@RequestHeader(name = "Authorization") String token) {
+		patientService.delete(id, token);
+		return ResponseEntity.status(HttpStatus.OK).body("Patient successfully deleted.");
+
 	}
 
 }
